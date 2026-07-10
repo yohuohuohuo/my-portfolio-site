@@ -3,244 +3,130 @@
 ## 当前快照
 
 日期：2026-07-10
+项目根目录：`/Users/qiuyupan/git_workspace/my-portfolio-site`
+分支：`codex/portfolio-migration`
 
-项目根目录：
+本仓库已从 Mint Forest 前端改造成个人作品集结构。`/` 是最小入口，`/mint-forest` 是本地化交互子作品。当前没有 push、merge、rebase、发布或部署动作。
+
+当前 HEAD：
 
 ```text
-/Users/qiuyupan/git_workspace/my-portfolio-site
+f3b98d2 test: enforce local Mint Forest runtime boundary
+be516a1 refactor: finish local Mint Forest runtime isolation
+9587379 refactor: replace wallet and chain flows
+595001c refactor: use local session and read gateway
+25636a5 feat: add local Mint Forest compatibility gateway
+5b5f03b feat: add deterministic Mint Forest state core
+ac6d5f5 feat: add portfolio routes and isolate Mint Forest
+cc031f7 test: add migration verification toolchain
+d6e86fa chore: establish sanitized source baseline
 ```
 
-本仓库是用户从 Mint Forest 项目拷贝来的前端代码。目标已经明确为个人作品集项目，但业务改造尚未开始，当前代码仍基本保持 Mint Forest V3 活动/游戏站形态。
+Task 8、Task 9、Task 10 的代码已通过阶段性本地 commit 保存；当前未执行任何远程 Git 操作。
 
-当前 Git 状态：
+## 已完成结构
 
-- `main` 分支尚无本地 commit。
-- `origin/main` 显示 gone。
-- 源码、配置、资源和文档目前都是 untracked。
-- 本轮只更新项目文档，没有修改业务源码，也没有 commit。
+- `src/pages/index.tsx`：作品集入口。
+- `src/pages/mint-forest/index.tsx`：薄路由。
+- `src/portfolio/config/projects.ts`：子作品注册配置。
+- `src/projects/mint-forest`：Mint Forest 全部运行时代码。
+- `public/projects/mint-forest`：Mint Forest 本地字体、图片、SVG、音乐和地图资源。
+- `src/shared`：已删除；没有 `@/shared` import。
+- `_app.tsx`：只保留全局 SCSS、字体和中性 metadata；Alert 已移动到 Mint Forest 根组件。
+- `_document.tsx`：只保留 Next 基础文档结构；Analytics、reCAPTCHA 和外部脚本已删除。
+- `playwright.config.ts`：固定 `workers: 1`，避免多个浏览器 worker 同时触发 Next dev server 编译导致 desktop 回归不稳定。
 
-## 已确认目标
+## 数据与运行时合同
 
-用户已经确认以下方向：
+- Gateway：`src/projects/mint-forest/data/mint-forest.gateway.ts`。
+- Repository：`src/projects/mint-forest/data/local-storage.repository.ts`。
+- Rules：`src/projects/mint-forest/data/demo-rules.ts`。
+- Store：`src/projects/mint-forest/store/use-mint-forest-store.ts`。
+- Storage key：`portfolio:mint-forest:v1`。
+- Session：`demo-session-v1`、Demo ID `1001`。
+- 固定规则：初始 `2400 MF`，daily `+120`，invite `+80`，steal `+60` 且每个目标只成功一次、总计最多三次；spin 成本 `100`，奖励序列 `[500, 50, 200, 1000, 100]`；box `501/502` 奖励 `150/250`；task `2/3/4/6` 奖励 `50/50/100/80`。
+- 所有 mutation 通过 repository 写入，再由项目 store 同步；业务组件不直接读写 browser storage。
 
-1. 增加个人作品集入口页面，用于连接当前及未来的子作品。
-2. 根路由 `/` 作为作品集入口。
-3. Mint Forest 作为子作品放在 `/mint-forest`。
-4. Mint Forest 专属代码归类到 `src/projects/mint-forest`。
-5. Mint Forest 专属资源归类到 `public/projects/mint-forest`。
-6. 保留 Mint Forest 业务交互，但移除所有链上操作和链基础设施。
-7. 原本需要链上写入或后端保存的状态改为 `localStorage`。
-8. 外部接口改为项目内 gateway 和 fixtures，并保持原接口返回结构。
-9. Mock 只需支持页面交互，不要求还原完整后端规则。
-10. 作品集入口只做最小项目导航，不虚构个人资料。
-11. Mock 实现最小确定性状态规则，而不是所有操作无条件成功。
-12. 先生成 implementation plan 并暂停审核，确认后再自动执行。
-13. 允许新增 Vitest、Playwright 和最小自动化测试。
-14. 允许下载代码实际引用的 Mint Forest CDN 资源并本地化。
-15. 允许创建脱敏 initial commit 和阶段性本地 commits，但禁止 push、merge、rebase、发布或部署。
+## 外部边界清理
 
-正式设计规格：
+运行时和静态审计已移除或禁止：
 
-`docs/superpowers/specs/2026-07-10-portfolio-mint-forest-migration-design.md`
+- RainbowKit、wagmi、viem、WalletConnect、ethers、ABI、合约执行方法。
+- Mint Forest API/CDN、Mint Chain RPC/explorer/bridge/swap、NFTScan。
+- Axios、Twitter SDK、Discord OAuth、Google Analytics、reCAPTCHA。
+- `src/shared`、`staticUrl`、`greenIdTokenUrl`、`BaseApi` 和直接 `localStorage`。
 
-## 已确认技术方案
+当前 `yarn.lock` 不再包含四个已删除的直接依赖：`@napi-rs/canvas`、`big.js`、`svg-path-properties`、`@types/big.js`。旧 Web3 包的不可达 lock entries 仍可能存在，但不再由 `package.json` 路径引用；它们不属于运行时安装图，后续可在有可用 Yarn registry 时生成一次干净 lockfile 进一步收缩。
 
-- 继续使用 Next.js Pages Router，删除未使用的 App Router 模板。
-- `src/pages/index.tsx` 作为作品集入口。
-- `src/pages/mint-forest/index.tsx` 作为薄路由，只加载子项目根组件。
-- 使用集中项目配置连接子作品，不在入口组件中硬编码项目清单。
-- 使用浏览器内 gateway 替换外部 API，不新增 Next API Routes 或独立后端。
-- 使用 fixtures 提供排行榜、新闻、活动、搜索结果等只读数据。
-- 使用版本化 localStorage repository 保存交互状态。
-- 默认 localStorage key：`portfolio:mint-forest:v1`。
-- 钱包登录替换为本地演示会话。
-- Discord/Twitter 任务验证替换为本地模拟结果。
-- 所有 Mint Forest 远程静态资源迁入本地 `public` 目录。
-- 提供用户可见的“重置演示数据”操作。
-- 固定使用可重复的 seed 和奖励结果，保证测试稳定。
+## 已验证证据
 
-## 目标模式执行停点
+已通过：
 
-正式规格已经适配 Codex 目标模式。首次运行必须：
-
-1. 只读盘点页面、交互、API、Web3、OAuth、外部资源和状态字段。
-2. 生成 `docs/superpowers/plans/2026-07-10-portfolio-mint-forest-migration.md`。
-3. 在修改业务源码、安装依赖或创建 commit 前暂停。
-4. 等待用户明确确认 implementation plan。
-
-计划确认后，目标模式可以连续执行后续阶段，每阶段验证通过后创建本地 commit。只有真实阻塞或需要超出规格的新产品决策时才暂停。
-
-## “保留交互”的边界
-
-需要保留的业务体验：
-
-- 地图拖动、缩放、建筑、区域和动画
-- 演示登录和退出
-- GreenID 展示与领取
-- 能量领取、邀请奖励和 steal
-- Lucky Spin
-- 背包、NFT、宝箱和开启操作
-- 任务、任务详情和任务结果
-- 排行榜、邀请、活动和新闻
-- Forest ID 搜索
-- OAuth 任务验证的本地演示流程
-- 原有弹窗、加载、成功、失败和状态反馈
-
-需要移除的链基础设施：
-
-- RainbowKit、wagmi、viem、WalletConnect
-- 钱包连接、网络切换和消息签名
-- 合约地址、ABI、合约读写和交易确认
-- Mint Chain RPC、explorer、bridge 和 swap
-
-## 当前技术栈
-
-- Next.js `15.2.6`
-- React `19`
-- TypeScript `5.5.2`
-- Tailwind CSS `3`
-- SCSS
-- zustand
-- axios
-- Two.js
-- motion
-- 当前仍安装 RainbowKit、wagmi、viem，待去链上化完成后删除
-
-可用脚本：
-
-```bash
-npm run dev
-npm run build
-npm run start
+```text
+npm run test:unit       3 test files, 18 tests passed
+npm run verify:routes   Route verification passed (5 routes)
+npm run verify:runtime  Runtime dependency audit passed
+npx tsc --noEmit        passed when run after build completion
+npm run build           exit 0; Next static generation completed
+npm run test:e2e         17 passed, 1 skipped; desktop 9/9, mobile 8/8 plus desktop-only search skip
+npm run test:e2e -- tests/e2e/network-audit.spec.ts
+                         desktop/mobile 2/2 passed; no non-local request or non-HMR 4xx/5xx response
 ```
 
-仓库有 `yarn.lock`，此前验证使用的是 `npm run build`。当前没有 `lint` 或 `test` script。
+Build 的已知提示：仓库没有安装 `eslint`，Next 输出 `ESLint must be installed in order to run during builds`；这不是 build exit failure。另有 Browserslist 数据过旧提示。
 
-后续计划已获授权新增最小测试基础设施：
+阶段性浏览器证据：
 
-- Vitest：gateway、localStorage repository 和状态规则。
-- Playwright：入口、主要交互、刷新持久化、重置、桌面/移动端和网络请求审计。
+- portfolio route E2E：入口项目卡片可见，可进入 `/mint-forest`。
+- session/read E2E：desktop 和 mobile session/read 流程在 Task 6 阶段通过；mobile 的 desktop-only Forest search 按设计 skip。
+- action E2E：desktop/mobile 通过本地 GreenID、daily、box、spin 流程。
+- task E2E：desktop 2/2 通过 Bridge 和 Discord local verification。
+- Task 10 ownership 迁移、GreenID 资源路径修复和 query 返回状态修复后，完整 desktop/mobile E2E 已重新通过。
 
-## 当前应用结构
+## 本地资源证据
 
-- `next.config.js`
-  - `/` rewrite 到 `/home`
-  - 配置了 SVG 导入
-  - 允许 `static.mintchain.io/forest/**` 远程图片
-- `src/pages/_app.tsx`
-  - 注入 RainbowKit/Wagmi provider、全局 Layout、样式和 Alert
-  - SEO/meta 仍是 Mint Forest 内容
-- `src/pages/_document.tsx`
-  - 加载 Google reCAPTCHA 和 Mint Forest Google Analytics
-- `src/pages/home/index.tsx`
-  - 当前业务入口
-  - 组装地图、登录、操作区和移动端菜单
-- `src/pages/home/components`
-  - Mint Forest 页面组件，会被 Next 误生成为 route
-- `src/pages/home/sections`
-  - Mint Forest sections 和 modal views，会被 Next 误生成为 route
-- `src/shared`
-  - 混合了真正公共代码与 Mint Forest 专属 hooks、services、const 和工具
-- `src/app/layout.tsx`
-  - App Router 模板残留
-- `public`
-  - Mint Forest 图片、地图、字体、音乐等资源尚未按子项目归类
+Task 3 下载的七个资源均已存在，`file` 报告为有效图片/GIF：
 
-## 当前外部依赖和敏感残留
+```text
+3e13ad948b789a2be8837c38494089fbb03be67b15805b271ce10b80815954a4  public/projects/mint-forest/images/map/map.jpg
+2c1a8fb2b82dad8068b4fbef0fdcdf403065a2a7a905498072958ef5b6af18b4  public/projects/mint-forest/images/ic-bubble-light.png
+2a9a6655f5ab8f147921302f95eca16bc462ef7206251dea954d5640c448fb15  public/projects/mint-forest/images/pic-spin-bg-mobile.png
+e47d11f7aed76091c90cf4fa5c7f59168d1b1d19de7aa12c95b9ec16d7798e58  public/projects/mint-forest/images/pic-spin-bg.png
+aba7742d06112a054c853f2a4bdf05ab6ea9de48172ed9c0f85ebd752a85d72c  public/projects/mint-forest/images/ic-box.png
+a94254d55a5cc1de799f200f0bfe88385e96683dd6faf3cea68dedafdfb145af  public/projects/mint-forest/images/nft/greenid-demo.png
+5834d219f957eb51aa5a6848aaa9b830372292d750cb6a1e760c2775326e1d14  public/projects/mint-forest/images/bubble-robot.gif
+```
 
-- `https://api.mintforest.io`
-- `https://static.mintchain.io`
-- Mint Chain RPC、explorer、bridge 和 swap
-- Mint Forest 合约地址和 ABI
-- WalletConnect project id
-- Discord/Twitter OAuth
-- Google reCAPTCHA
-- Google Analytics
-- Mint Forest SEO、OG、标题和文案
+## 浏览器截图与像素证据
 
-源码中已有疑似 OAuth secret。不要把具体值复制到文档、日志或提交说明。后续需要先从源码移除，再在对应第三方平台轮换。
+已在 `1440x900` 和 `390x844` 检查入口及登录后的 Mint Forest 页面：
 
-## 已验证事实
+- `output/playwright/portfolio-desktop.png`
+- `output/playwright/mint-forest-desktop-late.png`
+- `output/playwright/mint-forest-mobile.png`
+- desktop canvas sample：`[55, 114, 94, 255]`
+- mobile canvas sample：`[231, 99, 28, 255]`
 
-此前运行过：
+截图确认 GreenID 宝箱、地图 canvas、desktop/mobile 菜单和 Demo ID 可见，无旧 `/forest/ic-box.png` broken image。
+
+## 当前未完成停点
+
+1. 第三方 credential rotation 没有执行，也不能由源码清理替代；需要用户在对应平台人工处理。
+2. 当前截图和 E2E 覆盖了主要业务流程；少量重复失败态主要由 deterministic rules unit tests 覆盖，后续可继续补更细的 UI failure assertions。
+3. 当前没有 push、merge、rebase、发布或部署。
+
+## 下一步执行
+
+后续若继续开发，可按以下顺序复核：
 
 ```bash
+npm run test:e2e -- tests/e2e/network-audit.spec.ts
+npm run test:e2e
+npm run test:unit
+npm run verify:routes
+npm run verify:runtime
+npx tsc --noEmit
 npm run build
 ```
 
-结果：
-
-- 退出码为 `0`。
-- Next production build、编译和静态页生成完成。
-- 构建提示缺少 ESLint 依赖，lint 阶段未执行。
-- Browserslist/caniuse-lite 数据过旧。
-- route table 出现 `/home/components/*` 和 `/home/sections/*`，确认内部组件被当成页面。
-
-设计文档落地后尚未重新运行构建，因为本轮没有修改业务源码。
-
-## 推荐执行顺序
-
-### 阶段零：盘点和计划审核
-
-1. 只读盘点全部用户交互、service 合同、Web3/OAuth 调用、外部资源和状态字段。
-2. 将逐文件任务、交互映射、测试和 commit 边界写入 implementation plan。
-3. 自检计划是否覆盖设计规格全部验收标准。
-4. 暂停并等待用户确认，不修改业务源码。
-
-### 第一阶段：安全基线
-
-1. 移除 OAuth secret 和不应提交的配置。
-2. 检查 `.env` 是否被 `.gitignore` 覆盖。
-3. 检查源码中是否还有凭据字面量。
-4. 重写仍为 RainbowKit 模板的 README，说明项目来源和改造目标。
-5. 建立经过脱敏的原始代码 initial commit。
-
-### 第二阶段：作品集入口和结构迁移
-
-1. 新建 `src/pages/index.tsx`。
-2. 新建集中项目配置和 Mint Forest 项目入口。
-3. 将 `src/pages/home/components` 和 `sections` 迁出 `src/pages`。
-4. 将 Mint Forest 专属 shared 代码迁入 `src/projects/mint-forest`。
-5. 将资源迁入 `public/projects/mint-forest`。
-6. 删除 `/` 到 `/home` 的 rewrite 和 App Router 模板残留。
-7. 运行构建并确认只生成真实页面 route。
-
-### 第三阶段：本地数据层
-
-1. 盘点现有 service 方法和返回类型。
-2. 建立 fixtures、gateway 和 localStorage repository。
-3. 将查询接口切换到 fixtures/localStorage。
-4. 将写入接口切换到本地状态变更。
-5. 验证刷新持久化、损坏数据恢复和初始 seed。
-
-### 第四阶段：去链上化和外部清理
-
-1. 用本地演示会话替换钱包登录。
-2. 替换 claim、steal、spin、开箱等合约调用。
-3. 替换 OAuth 验证。
-4. 删除 Web3 providers、hooks、services、ABI 和无引用依赖。
-5. 本地化远程 Mint Forest 资源。
-6. 删除原 GA、reCAPTCHA、Mint Forest meta 和远程域名配置。
-
-### 第五阶段：发布验证和文档
-
-1. 验证 `/` 和 `/mint-forest` 桌面端、移动端流程。
-2. 验证 Network 面板没有 Mint Forest API、CDN、RPC 或 OAuth 请求。
-3. 运行 `npm run build`。
-4. 重写 README 和部署说明。
-5. 更新本文件中的完成状态、验证结果和剩余风险。
-
-## 下一步停点
-
-设计和目标模式执行协议已经确认并写入本地文档，但详细到文件、接口、状态规则和测试步骤的 implementation plan 尚未生成，业务源码也尚未修改。
-
-下一位 agent 应先阅读 `AGENTS.md` 和正式设计规格，只读盘点后生成 implementation plan，然后暂停等待用户审核。计划确认后允许创建本地阶段性 commits，但不得 push、merge、rebase、发布或部署。
-
-## 本轮文档变更
-
-- 更新 `AGENTS.md`
-- 更新 `HANDOFF.md`
-- 更新 `docs/superpowers/specs/2026-07-10-portfolio-mint-forest-migration-design.md`，加入目标模式执行合同
-- 未修改业务源码
-- 未运行构建
-- 未创建 commit
+确认浏览器回归通过后，复核 `git diff --check`、`git status --short` 和 `git diff --name-status`，再创建剩余阶段性本地 commits。不要 push、merge、rebase、发布或部署。
