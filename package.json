@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test",
+    "verify:routes": "node scripts/verify-pages-routes.mjs",
+    "verify:runtime": "node scripts/audit-runtime-dependencies.mjs"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.69",
@@ -38,6 +42,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@svgr/webpack": "^8.1.0",
     "@types/big.js": "^6.2.2",
     "@types/lodash": "^4.17.16",
@@ -45,9 +50,11 @@
     "@types/react": "^19.0.6",
     "@types/react-modal": "^3.16.3",
     "autoprefixer": "^10.4.20",
+    "jsdom": "^29.1.1",
     "postcss": "^8.5.3",
     "sass": "^1.85.1",
     "tailwindcss": "3",
-    "typescript": "5.5.2"
+    "typescript": "5.5.2",
+    "vitest": "^4.1.10"
   }
 }
