@@ -1,11 +1,10 @@
 import CommonEmpty from '@/shared/components/common-empty.component';
 import Dropdown from '@/shared/components/dropdown.component';
 import { useMobile } from '@/shared/hooks';
-import { useSearchUser } from '@/shared/hooks/use-search-user';
-import { IUserInfo } from '@/shared/interfaces';
+import type { IUserInfo } from '../types/api';
+import { useSearchUser } from '../hooks/use-search-user';
 import { SearchSvg } from '@/shared/svg';
 import classNames from 'classnames';
-import { debounce } from 'lodash';
 import { FC, useCallback, useRef, useState } from 'react';
 import RankItem from './rank-item.component';
 
@@ -35,6 +34,8 @@ const SearchBox: FC<SearchBoxInterface> = (props) => {
           rankPlace: null,
           greenId: data.greenId,
         };
+      } else {
+        data.rankVO = { ...data.rankVO, greenId: data.greenId };
       }
       setUserInfo(data);
       dropRef.current?.show();
@@ -45,12 +46,12 @@ const SearchBox: FC<SearchBoxInterface> = (props) => {
   });
 
   const searchRequest = useCallback(
-    debounce((value: string) => {
+    (value: string) => {
       if (!value) return;
       setUserInfo(undefined);
       queryUserInfo(value);
-    }, 600),
-    []
+    },
+    [queryUserInfo]
   );
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

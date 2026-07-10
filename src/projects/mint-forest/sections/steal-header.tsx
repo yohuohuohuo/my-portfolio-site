@@ -25,7 +25,7 @@ const StealHeader: FC<StealHeaderInterface> = (props) => {
   }
 
   return (
-    <div className="w-[94vw] h-20 lg:w-[68%] absolute left-1/2 -translate-x-1/2 top-[50px] lg:top-[98px]">
+    <div data-testid="other-forest-header" className="w-[94vw] h-20 lg:w-[68%] absolute left-1/2 -translate-x-1/2 top-[50px] lg:top-[98px]">
       <Link
         href={'/mint-forest'}
         replace
@@ -35,7 +35,7 @@ const StealHeader: FC<StealHeaderInterface> = (props) => {
         <Arrow2Svg className={'w-[20px] h-[12px] rotate-90'} />
       </Link>
       <div className="w-fit flex items-center justify-between min-w-[170px] h-20 rounded-[50px] border-2 border-white bg-[#F4FAF7] gap-11 relative absolute-center">
-        <span className="text-lg font-semibold text-black pl-[64px]">LV.{otherUserInfo.level}</span>
+        <span className="text-lg font-semibold text-black pl-[64px]">Forest ID {otherUserInfo.greenId} · LV.{otherUserInfo.level}</span>
         <span className="text-lg font-semibold text-black text-primary pr-8">
           {formatNumber(otherUserInfo.mfTotalAmounts)}
         </span>

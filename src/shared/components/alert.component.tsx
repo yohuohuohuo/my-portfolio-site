@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { AnimatePresence, motion } from 'motion/react';
 import { FC, useEffect, useState } from 'react';
-import { useGlobalStore } from '../hooks';
+import { useMintForestStore } from '@/projects/mint-forest/store/use-mint-forest-store';
 
 export type AlertType = 'success' | 'info' | 'error';
 
@@ -48,7 +48,7 @@ const AlertTemplate: FC<AlertProps> = ({ message, type, className, duration }) =
 };
 
 const Alert: FC<{ className?: string }> = ({ className }) => {
-  const { setState } = useGlobalStore();
+  const { setState } = useMintForestStore();
   const [alertList, setAlertList] = useState<AlertProps[]>([]);
 
   const addAlert = (message: string, type: AlertType, duration?: number) => {

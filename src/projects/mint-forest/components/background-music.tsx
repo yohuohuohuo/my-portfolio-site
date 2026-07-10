@@ -2,15 +2,17 @@ import { SoundSvg } from '@/shared/svg';
 import classNames from 'classnames';
 import { motion } from 'motion/react';
 import { FC, useEffect, useRef, useState } from 'react';
+import { useMintForestStore } from '../store/use-mint-forest-store';
 
 interface BackGroundMusicInterface {}
 
 const BackGroundMusic: FC<BackGroundMusicInterface> = (props) => {
   const [soundOpen, setSoundOpen] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const { audioMuted, setAudioMuted } = useMintForestStore();
 
   useEffect(() => {
-    const soundClosed = localStorage.getItem('_bgm_closed') === '1';
+    const soundClosed = audioMuted;
     setSoundOpen(!soundClosed);
 
     const audio = new Audio('/projects/mint-forest/music/bg.mp3');
@@ -28,14 +30,14 @@ const BackGroundMusic: FC<BackGroundMusicInterface> = (props) => {
     return () => {
       audio.pause();
     };
-  }, []);
+  }, [audioMuted]);
 
   const onSoundClick = () => {
     if (!audioRef.current) return;
     const next = !soundOpen;
 
     setSoundOpen(next);
-    localStorage.setItem('_bgm_closed', !next ? '1' : '0');
+    setAudioMuted(!next);
 
     if (!next) {
       audioRef.current.pause();

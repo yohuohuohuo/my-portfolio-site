@@ -1,6 +1,5 @@
-import { ForestNewsKey } from '@/shared/const';
-import { useAxios, useGlobalStore, useOtherIndex, useResize } from '@/shared/hooks';
-import { isEmpty, STANDARD_SCREEN } from '@/shared/utils';
+import { useOtherIndex, useResize } from '@/shared/hooks';
+import { STANDARD_SCREEN } from '@/shared/utils';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useEffect } from 'react';
@@ -9,13 +8,15 @@ import BoxTop from './sections/box-top';
 import Login from './sections/login';
 import MapViewer from './sections/map-viewer';
 import MenuMobile from './sections/menu-mobile';
-import { httpService } from '@/shared/services';
-import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
+import { useDemoRequest } from './hooks/use-demo-request.hook';
+import { useGlobalConfig } from './hooks/use-global-config.hook';
+import { useMintForestStore } from './store/use-mint-forest-store';
+import { mintForestGateway } from './data/runtime';
 import StealHeader from './sections/steal-header';
 import OAuthValidator from './sections/validator';
 
 const Home: NextPage = () => {
-  const { token, pageStatus, setState } = useGlobalStore();
+  const { hydrated, token, pageStatus, setState, hydrate } = useMintForestStore();
   const { initGlobalConfig } = useGlobalConfig();
   const isOtherIndex = useOtherIndex();
 
@@ -29,51 +30,34 @@ const Home: NextPage = () => {
     });
   }, []);
 
-  const { run: queryNews } = useAxios(
-    () => {
-      return {
-        url: '/api/forest/normal/getForestNews',
-        method: 'get',
-      };
-    },
+  const { run: queryNews } = useDemoRequest<{ content: Array<{ time: string }>; result: Array<{ time: string }> }, []>(
+    () => ({
+      url: '/api/forest/normal/getForestNews',
+      method: 'GET',
+      params: { cursor: '' },
+    }),
     {
-      onSuccess: (res: any, params: any[]) => {
-        const { result: list } = res;
-        if (isEmpty(list)) {
-          setState({ showUnRead: false });
-          return;
-        }
-
-        const cache = localStorage.getItem(ForestNewsKey) || '';
-        if (isEmpty(cache)) {
-          setState({ showUnRead: true });
-          return;
-        }
-
-        const unread = list.some((item: any) => !cache.includes(item.time));
-        setState({ showUnRead: unread });
+      gateway: mintForestGateway,
+      onSuccess: (data) => {
+        setState({ showUnRead: data.result.length > 0 });
       },
-    }
+    },
   );
 
   useEffect(() => {
-    if (!token) return;
-    queryNews();
-  }, [token]);
+    if (!hydrated) hydrate();
+  }, [hydrate, hydrated]);
 
   useEffect(() => {
-    httpService.setToken(token || '');
-    if (token) {
-      httpService.retry();
-    }
-  }, [token]);
+    queryNews();
+  }, [queryNews]);
 
   useEffect(() => {
     initGlobalConfig();
-  }, []);
+  }, [initGlobalConfig]);
 
   const onMapDrawComplete = () => {
-    setState({ pageStatus: 'login' });
+    if (!useMintForestStore.getState().token) setState({ pageStatus: 'login' });
   };
 
   return (

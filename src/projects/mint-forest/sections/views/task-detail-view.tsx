@@ -4,14 +4,16 @@ import Link from 'next/link';
 import { FC, useCallback, useEffect, useState } from 'react';
 import TaskResultView from './task-result-modal';
 import parse from 'html-react-parser';
-import { useAlert, useAxios } from '@/shared/hooks';
+import { useAlert } from '@/shared/hooks';
 import { HttpCode } from '@/shared/const';
 import moment from 'moment';
 import LoadMore from '@/shared/components/loadmore/loadmore.component';
 import CommonEmpty from '@/shared/components/common-empty.component';
 import GoButton from '../../components/go-button.component';
-import { discordService } from '@/shared/services/discord.service';
 import { formatNumber } from '@/shared/utils';
+import type { TaskVerifyResult } from '../../types/api';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 
 interface TaskDetail {
   id: number;
@@ -42,13 +44,14 @@ const TaskDetailView: FC<TaskDetailViewProps> = ({ id, onBack }) => {
   const [goLoading, setGoLoading] = useState<boolean>(false);
   const alert = useAlert();
 
-  const { run: queryTaskDetail } = useAxios(
+  const { run: queryTaskDetail } = useDemoRequest<TaskDetail, [number]>(
     (id) => ({
       url: `/api/forest/task/detail/${id}`,
-      method: 'get',
+      method: 'GET',
     }),
     {
-      onSuccess: (res: TaskDetail) => {
+      gateway: mintForestGateway,
+      onSuccess: (res) => {
         setTaskDetail(res);
         setLoading(false);
       },
@@ -58,57 +61,57 @@ const TaskDetailView: FC<TaskDetailViewProps> = ({ id, onBack }) => {
     }
   );
 
-  const { run: checkRedotPay } = useAxios(
+  const { run: checkRedotPay } = useDemoRequest<TaskVerifyResult, [string]>(
     (uid) => ({
       url: '/api/forest/task/checkRedotPay',
-      method: 'get',
+      method: 'GET',
       params: { uid },
     }),
     {
-      original: true,
-      onSuccess: (res: any) => {
+      gateway: mintForestGateway,
+      onSuccess: () => {
         setTaskResultVisible(true);
         setVerifyLoading(false);
       },
-      onError: (error: any) => {
+      onError: (error) => {
         alert.error(error.msg || 'Failed to check RedotPay task');
         setVerifyLoading(false);
       },
     }
   );
 
-  const { run: checkBridge } = useAxios(
+  const { run: checkBridge } = useDemoRequest<TaskVerifyResult, [string]>(
     (txHash: string) => ({
       url: '/api/forest/task/checkBridge',
-      method: 'get',
+      method: 'GET',
       params: { txHash },
     }),
     {
-      original: true,
-      onSuccess: (res: any) => {
+      gateway: mintForestGateway,
+      onSuccess: () => {
         setTaskResultVisible(true);
         setVerifyLoading(false);
       },
-      onError: (error: any) => {
+      onError: (error) => {
         alert.error(error.msg || 'Failed to check Bridge task');
         setVerifyLoading(false);
       },
     }
   );
 
-  const { run: checkJoinDiscord } = useAxios(
-    (code: string, mf: number) => ({
+  const { run: checkJoinDiscord } = useDemoRequest<TaskVerifyResult, [string, number]>(
+    (code: string) => ({
       url: '/api/forest/task/checkJoinDiscord',
-      method: 'get',
+      method: 'GET',
       params: { code },
     }),
     {
-      original: true,
-      onSuccess: (res: any, [, mf]: any[]) => {
+      gateway: mintForestGateway,
+      onSuccess: () => {
         setTaskResultVisible(true);
         setGoLoading(false);
       },
-      onError: (error: any) => {
+      onError: (error) => {
         alert.error(error.msg || 'Failed to check Discord task');
         setGoLoading(false);
       },
@@ -138,13 +141,7 @@ const TaskDetailView: FC<TaskDetailViewProps> = ({ id, onBack }) => {
   const handleTask = useCallback(async () => {
     if (id === 3) {
       setGoLoading(true);
-      const res = await discordService.startOAuth();
-      if (res.success) {
-        checkJoinDiscord(res.data?.code);
-      } else {
-        alert.error(res.error || 'Failed to authorize Discord');
-        setGoLoading(false);
-      }
+      checkJoinDiscord('FOREST-DISCORD', taskDetail?.mf || 0);
       return;
     }
 

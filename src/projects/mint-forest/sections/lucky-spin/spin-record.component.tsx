@@ -1,40 +1,42 @@
 import CommonEmpty from '@/shared/components/common-empty.component';
 import { HttpCode } from '@/shared/const';
 import { useGlobalStore, useMobile, useReachBottom } from '@/shared/hooks';
-import { useAxios } from '@/shared/hooks/axios.hook';
 import { isEmpty } from '@/shared/utils';
 import moment from 'moment';
 import { FC, useEffect, useRef, useState } from 'react';
+import type { ActivityItem } from '../../types/api';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 
 interface SpinRecordInterface {}
 
 const SpinRecord: FC<SpinRecordInterface> = (props) => {
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<ActivityItem[]>([]);
   const listRef = useRef<HTMLDivElement>(null);
   const { isMobile } = useMobile();
   const { userInfo } = useGlobalStore();
   const cursor = useRef('');
   const [status, setStatus] = useState<HttpCode>();
 
-  const { run: queryHistory, status: queryStatus } = useAxios(
+  const { run: queryHistory } = useDemoRequest<{ content: ActivityItem[]; next: string }, [string]>(
     (cursor: string) => {
       return {
         url: '/api/forest/normal/getUserActivity',
-        method: 'get',
+        method: 'GET',
         params: { cursor, txType: 10 },
       };
     },
     {
-      onSuccess: (data: any, params: any[]) => {
-        if (isEmpty(data)) {
-          return;
-        }
+      gateway: mintForestGateway,
+      onSuccess: (data) => {
         const { content, next } = data;
 
         if (isEmpty(content) && !cursor.current) {
           setStatus(HttpCode.NoData);
           return;
         }
+
+        setStatus(HttpCode.Success);
 
         setList((current) => {
           return !cursor.current ? content : [...(current || []), ...content];
@@ -44,6 +46,7 @@ const SpinRecord: FC<SpinRecordInterface> = (props) => {
       },
       onError: () => {
         cursor.current = '';
+        setStatus(HttpCode.Error);
       },
     }
   );
@@ -85,7 +88,7 @@ const SpinRecord: FC<SpinRecordInterface> = (props) => {
             </div>
           );
         })}
-        <CommonEmpty status={status || queryStatus} data={list} />
+        <CommonEmpty status={status} data={list} />
       </div>
     </div>
   );

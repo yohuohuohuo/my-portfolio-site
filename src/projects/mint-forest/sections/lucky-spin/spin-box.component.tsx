@@ -3,13 +3,15 @@ import LoadMore from '@/shared/components/loadmore/loadmore.component';
 import { shouldMintChain } from '@/shared/const';
 import {
   useAlert,
-  useAxios,
   useClientAccount,
   useCurrentUserInfo,
   useGlobalStore,
   useScaleValue,
 } from '@/shared/hooks';
 import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
+import type { SpinResult } from '../../types/api';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 import { etherSvc } from '@/shared/services/ethers.service';
 import {
   BubbleSvg,
@@ -101,16 +103,17 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
     }, 0);
   }, [scaleValue]);
 
-  const { run: getSpinGift } = useAxios(
+  const { run: getSpinGift } = useDemoRequest<SpinResult, [string]>(
     (name: string) => {
       return {
         url: '/api/forest/normal/openTurntable',
-        method: 'get',
+        method: 'GET',
         params: { name },
       };
     },
     {
-      onSuccess: async (data: any) => {
+      gateway: mintForestGateway,
+      onSuccess: async (data) => {
         if (isEmpty(data)) return;
         const { success, msg } = await etherSvc.turntable(data.signature, data.turntableId, data.times);
         if (!success) {
@@ -120,7 +123,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
           start(data);
         }
       },
-      onError: (e: any) => {
+      onError: (e) => {
         alert.error(e.msg);
         setLoading(false);
       },
@@ -143,7 +146,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
       });
       return;
     }
-    getSpinGift();
+    getSpinGift('');
   };
 
   const start = (data: any) => {

@@ -6,7 +6,9 @@ import { CSSProperties, FC, useEffect, useRef, useState, useCallback, useMemo } 
 import SearchBox from '../../components/search-box.component';
 import Modal from 'react-modal';
 import { HttpCode } from '@/shared/const';
-import { useAxios, useCurrentUserInfo } from '@/shared/hooks';
+import { useCurrentUserInfo } from '@/shared/hooks';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 import RankItem from '../../components/rank-item.component';
 
 interface RankResponse {
@@ -33,16 +35,17 @@ const LeaderboardView: FC<LeaderboardViewInterface> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const userInfo = useCurrentUserInfo();
 
-  const { run: getRankData } = useAxios(
+  const { run: getRankData } = useDemoRequest<RankResponse, [string | null]>(
     (cursor: string | null) => ({
       url: '/api/forest/normal/getRankData',
-      method: 'get',
+      method: 'GET',
       params: {
         cursor,
       },
     }),
     {
-      onSuccess: (res: RankResponse, [cursor]: any) => {
+      gateway: mintForestGateway,
+      onSuccess: (res, [cursor]) => {
         const { content, next } = res;
         const isFirstCall = cursor === null;
         if (isFirstCall && content.length === 0) {

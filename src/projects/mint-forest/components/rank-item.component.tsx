@@ -75,6 +75,7 @@ const RankItem: FC<RankItemInterface> = ({ item, type }) => {
 
   return (
     <div
+      data-testid={type === 'search' && item.greenId ? `search-result-${item.greenId}` : undefined}
       className={classNames(
         'w-full rounded-[12px] h-30 flex-shrink-0 flex items-center justify-between cursor-pointer'
       )}

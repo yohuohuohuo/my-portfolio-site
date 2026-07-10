@@ -26,6 +26,7 @@ export function useDemoRequest<T = unknown, Args extends unknown[] = unknown[]>(
   const mountedRef = useRef(true);
   const requestIdRef = useRef(0);
   const gatewayRef = useRef<DemoGateway | null>(null);
+  const getRequestRef = useRef(getRequest);
   const onSuccessRef = useRef(config.onSuccess);
   const onErrorRef = useRef(config.onError);
 
@@ -34,9 +35,10 @@ export function useDemoRequest<T = unknown, Args extends unknown[] = unknown[]>(
   }
 
   useEffect(() => {
+    getRequestRef.current = getRequest;
     onSuccessRef.current = config.onSuccess;
     onErrorRef.current = config.onError;
-  }, [config.onError, config.onSuccess]);
+  }, [config.onError, config.onSuccess, getRequest]);
 
   useEffect(() => {
     return () => {
@@ -62,7 +64,7 @@ export function useDemoRequest<T = unknown, Args extends unknown[] = unknown[]>(
 
       let response;
       try {
-        response = await gatewayRef.current!.request<T>(getRequest(...props));
+        response = await gatewayRef.current!.request<T>(getRequestRef.current(...props));
       } catch {
         if (!mountedRef.current || requestIdRef.current !== requestId) return;
         setLoading(false);
@@ -81,7 +83,7 @@ export function useDemoRequest<T = unknown, Args extends unknown[] = unknown[]>(
         await onErrorRef.current?.({ code: response.code, msg: response.msg }, props);
       }
     },
-    [getRequest],
+    [],
   );
 
   return { run, cancel, loading, status };

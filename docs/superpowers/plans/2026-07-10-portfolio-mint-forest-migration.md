@@ -745,35 +745,35 @@ git commit -m "feat: add local Mint Forest compatibility gateway"
 - Store hydrates from repository and exposes current/other user plus UI page status.
 - Components call `useDemoRequest`, never Axios.
 
-- [ ] **Step 1: Write failing session and read-view E2E tests**
+- [x] **Step 1: Write failing session and read-view E2E tests**
 
 Session test: load map, enter invite code, click local login, see Demo ID, reload and remain logged in, logout and return to login, log in again and preserve data.
 
 Read-view test: search `2001`; unknown ID no-data; visit other forest and return; open leaderboard, invite records, activity, news, backpack, task lists and spin history; exercise mobile menu tabs.
 
-- [ ] **Step 2: Move and implement the project-owned store/hydration hooks**
+- [x] **Step 2: Move and implement the project-owned store/hydration hooks**
 
 Use `git mv` for the four hooks listed above. Replace wallet-derived address/token with repository session and expose `hydrate()`, `syncFromRepository()`, `login(inviteCode?)`, `logout()` and `reset()` actions. Keep `pageStatus: loading | login | complete`. `selectedForestId` follows `/mint-forest?id=...`; clearing selection returns to the user's forest without leaving the route.
 
 Until Task 10 updates the remaining mechanical imports, `src/shared/hooks/index.tsx` may re-export the project-owned store/user hooks, and the three direct store consumers in shared must import the project store explicitly. Mark these compatibility imports in the plan checklist; they are deleted in Task 10 and must not survive `verify:runtime`.
 
-- [ ] **Step 3: Rewrite Login without wallet UI**
+- [x] **Step 3: Rewrite Login without wallet UI**
 
 Remove `useConnectModal`, `useSignMessage`, client address, signature generation and per-address token cache. Keep invite input, loading state, title and Explore transition. Button text becomes `Enter Demo`.
 
-- [ ] **Step 4: Rewrite profile controls**
+- [x] **Step 4: Rewrite profile controls**
 
 Replace wallet icon/address with `Demo ID 1001`; actions are Copy Demo ID, Reset Demo Data, and Log Out. Reset must call gateway reset, rehydrate state, clear selected forest and show a success alert.
 
-- [ ] **Step 5: Switch every listed read call site to the gateway**
+- [x] **Step 5: Switch every listed read call site to the gateway**
 
 Replace `useAxios`/`httpService` at the project root, spin record, activity, backpack, invite, leaderboard, news, task list/detail, search and global config call sites listed in this task. Preserve endpoint configs and consumed DTO fields while changing the hook import. `sections/validator.tsx` is the only temporary Axios caller and is deleted in Task 8. Update news read tracking and audio preference to the unified state instead of standalone localStorage keys.
 
-- [ ] **Step 6: Replace external share navigation**
+- [x] **Step 6: Replace external share navigation**
 
 Invite Share uses `navigator.share` with a local `/mint-forest?inviteCode=FOREST-DEMO` URL; if unavailable, copy the local URL and show success. Do not call `twitter.com`.
 
-- [ ] **Step 7: Run read-flow verification**
+- [x] **Step 7: Run read-flow verification**
 
 ```bash
 npm run test:unit

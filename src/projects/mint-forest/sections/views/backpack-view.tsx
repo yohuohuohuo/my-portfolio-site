@@ -5,11 +5,13 @@ import LoadMore from '@/shared/components/loadmore/loadmore.component';
 import { FC, useEffect, useState, useCallback } from 'react';
 import { GreenIdAddress, HttpCode, shouldMintChain } from '@/shared/const';
 import OpenBoxModal from '../../components/openbox-modal.component';
-import { useAlert, useAxios, useCheckWallet, useGlobalStore } from '@/shared/hooks';
+import { useAlert, useCheckWallet, useGlobalStore } from '@/shared/hooks';
 import moment from 'moment';
 import { etherSvc } from '@/shared/services/ethers.service';
 import { isEmpty } from '@/shared/utils';
 import { GreenIdStatusEnum } from '@/shared/interfaces';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 
 interface NFTItem {
   contract: string;
@@ -86,14 +88,15 @@ const BackPackView: FC<BackPackViewInterface> = () => {
   const alert = useAlert();
   const { checkAndSwitch } = useCheckWallet(shouldMintChain().id);
 
-  const { run: openBox } = useAxios(
+  const { run: openBox } = useDemoRequest<OpenBoxResponse, [number]>(
     (boxNumber: number) => ({
       url: '/api/forest/normal/openBoxData',
-      method: 'get',
+      method: 'GET',
       params: { boxNumber },
     }),
     {
-      onSuccess: async (res: OpenBoxResponse) => {
+      gateway: mintForestGateway,
+      onSuccess: async (res) => {
         try {
           const result = await etherSvc.openReward(res.signature, Number(res.speedAmount), res.boxNumber);
           if (result.success) {
@@ -115,7 +118,7 @@ const BackPackView: FC<BackPackViewInterface> = () => {
           setLoadingBoxIndex(null);
         }
       },
-      onError: (error: any) => {
+      onError: (error) => {
         alert.error(error.msg || 'Failed to open box');
         console.error('Failed to open box:', error);
         setLoadingBoxIndex(null);
@@ -123,17 +126,18 @@ const BackPackView: FC<BackPackViewInterface> = () => {
     }
   );
 
-  const { run: getBoxData } = useAxios(
+  const { run: getBoxData } = useDemoRequest<BoxResponse, [string | null]>(
     (cursor: string | null) => ({
       url: '/api/forest/normal/getBoxData',
-      method: 'get',
+      method: 'GET',
       params: {
         status: 0,
         cursor,
       },
     }),
     {
-      onSuccess: (res: BoxResponse, [cursor]: [string | null]) => {
+      gateway: mintForestGateway,
+      onSuccess: (res, [cursor]) => {
         const { content, next } = res;
 
         if (content.length === 0 && cursor === null) {
@@ -164,16 +168,17 @@ const BackPackView: FC<BackPackViewInterface> = () => {
     }
   );
 
-  const { run: getNftData } = useAxios(
+  const { run: getNftData } = useDemoRequest<NftResponse, [string | null]>(
     (cursor: string | null) => ({
       url: '/api/forest/normal/getMyNft',
-      method: 'get',
+      method: 'GET',
       params: {
         cursor,
       },
     }),
     {
-      onSuccess: (res: NftResponse, [cursor]: [string | null]) => {
+      gateway: mintForestGateway,
+      onSuccess: (res, [cursor]) => {
         const { content, next } = res;
 
         const currentList = isEmpty(content) ? [] : content;

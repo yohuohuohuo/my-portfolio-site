@@ -1,4 +1,4 @@
-import { useGlobalStore } from '.';
+import { useMintForestStore } from '@/projects/mint-forest/store/use-mint-forest-store';
 
 const TypeTitles = {
   collect: 'Collected MF',
@@ -7,7 +7,7 @@ const TypeTitles = {
 };
 
 export const useAlert = () => {
-  const { addAlert } = useGlobalStore();
+  const { addAlert } = useMintForestStore();
 
   const error = (msg?: string, duration?: number) => {
     if (addAlert && msg) {

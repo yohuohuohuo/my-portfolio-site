@@ -1,54 +1,45 @@
 /* eslint-disable @next/next/no-img-element */
 import CommonEmpty from '@/shared/components/common-empty.component';
 import ScrollBox from '@/shared/components/scroll-box.component';
-import { AuthType, ForestNewsKey, HttpCode } from '@/shared/const';
-import { useGlobalStore } from '@/shared/hooks';
-import { useAxios } from '@/shared/hooks/axios.hook';
+import { HttpCode } from '@/shared/const';
 import { isEmpty } from '@/shared/utils';
 import moment from 'moment';
 import Link from 'next/link';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import type { NewsGroup } from '../../types/api';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
+import { useMintForestStore } from '../../store/use-mint-forest-store';
 
 interface NewsViewInterface {}
 
 const NewsView: FC<NewsViewInterface> = (props) => {
-  const { setState } = useGlobalStore();
-  const [list, setList] = useState<any[]>();
+  const { markNewsRead } = useMintForestStore();
+  const [list, setList] = useState<NewsGroup[]>();
   const [status, setStatus] = useState<HttpCode | 'loading' | undefined>();
   const cursor = useRef('');
   const haveMore = useRef(false);
 
-  const { run: queryNews, status: requestStatus } = useAxios(
+  const { run: queryNews } = useDemoRequest<{ content: NewsGroup[]; next: string }, [string]>(
     (cursor) => {
       return {
         url: '/api/forest/normal/getForestNews',
-        method: 'get',
+        method: 'GET',
         params: { cursor },
       };
     },
     {
-      authType: AuthType.Ignored,
-      onSuccess: (data: any, params: any[]) => {
+      gateway: mintForestGateway,
+      onSuccess: (data, params) => {
         const { content, next } = data;
         cursor.current = next;
         haveMore.current = !isEmpty(content) && content.length >= 50;
-
-        if (params[0] == 1 && isEmpty(content)) {
-          setTimeout(() => {
-            setStatus(HttpCode.NoData);
-          }, 600);
-        }
-
-        setList((current) => {
-          return !cursor.current ? content : [...(current || []), ...content];
-        });
+        setStatus(content.length ? HttpCode.Success : HttpCode.NoData);
+        setList((current) => (params[0] === '' ? content : [...(current || []), ...content]));
       },
+      onError: () => setStatus(HttpCode.Error),
     }
   );
-
-  useEffect(() => {
-    setStatus(requestStatus);
-  }, [requestStatus]);
 
   useEffect(() => {
     queryNews(cursor.current);
@@ -66,16 +57,8 @@ const NewsView: FC<NewsViewInterface> = (props) => {
       return;
     }
 
-    const oldItems = localStorage.getItem(ForestNewsKey) || '';
-    const newsItems = list
-      .filter((item) => !oldItems.includes(item.time))
-      .map((item) => item.time)
-      .join(',');
-
-    localStorage.setItem(ForestNewsKey, [oldItems, newsItems].filter((item) => !isEmpty(item)).join(','));
-
-    setState({ showUnRead: false });
-  }, [list]);
+    markNewsRead(list.map((item) => item.time));
+  }, [list, markNewsRead]);
 
   return (
     <>

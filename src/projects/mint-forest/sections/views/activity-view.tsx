@@ -3,7 +3,8 @@ import ScrollBox from '@/shared/components/scroll-box.component';
 import CommonEmpty from '@/shared/components/common-empty.component';
 import { FC, useEffect, useState, useCallback } from 'react';
 import { HttpCode } from '@/shared/const';
-import { useAxios } from '@/shared/hooks';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 import moment from 'moment';
 import { formatNumber } from '@/shared/utils';
 import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
@@ -53,16 +54,17 @@ const ActivityView: FC<ActivityViewInterface> = () => {
   const [hasMore, setHasMore] = useState(true);
   const turntableSpent = useGlobalConfig(useShallow((state) => state.turntableSpent));
 
-  const { run: queryActivity } = useAxios(
+  const { run: queryActivity } = useDemoRequest<ActivityResponse, [string | null]>(
     (cursor: string | null) => ({
       url: '/api/forest/normal/getUserActivity',
-      method: 'get',
+      method: 'GET',
       params: {
         cursor,
       },
     }),
     {
-      onSuccess: (res: ActivityResponse, [cursor]: any) => {
+      gateway: mintForestGateway,
+      onSuccess: (res, [cursor]) => {
         const { content: newActivities, next: newCursor } = res;
 
         const isFirstCall = cursor === null;

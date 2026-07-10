@@ -4,10 +4,13 @@ import { CopySvg, ITwitterSvg } from '@/shared/svg';
 import { FC, useCallback, useState, useEffect } from 'react';
 import { useClipboard } from 'use-clipboard-copy';
 import { HttpCode } from '@/shared/const';
-import { useAlert, useAxios, useGlobalStore } from '@/shared/hooks';
+import { useAlert } from '@/shared/hooks';
 import moment from 'moment';
-import { ellipsis, getInviteUrl } from '@/shared/utils';
+import { ellipsis } from '@/shared/utils';
 import Link from 'next/link';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
+import { useMintForestStore } from '../../store/use-mint-forest-store';
 
 interface InvitationRecord {
   address: string;
@@ -29,7 +32,7 @@ interface InviteResponse {
 interface InviteViewInterface {}
 
 const InviteView: FC<InviteViewInterface> = () => {
-  const { userInfo } = useGlobalStore();
+  const { userInfo } = useMintForestStore();
   const { copy } = useClipboard();
   const [records, setRecords] = useState<InvitationRecord[]>([]);
   const [status, setStatus] = useState<HttpCode | 'loading' | undefined>('loading');
@@ -38,16 +41,17 @@ const InviteView: FC<InviteViewInterface> = () => {
   const [hasMore, setHasMore] = useState(true);
   const alert = useAlert();
 
-  const { run: getUserInviteData } = useAxios(
+  const { run: getUserInviteData } = useDemoRequest<InviteResponse, [string | null]>(
     (cursor: string | null) => ({
       url: '/api/forest/normal/getUserInviteData',
-      method: 'get',
+      method: 'GET',
       params: {
         cursor,
       },
     }),
     {
-      onSuccess: (res: InviteResponse, [cursor]: any) => {
+      gateway: mintForestGateway,
+      onSuccess: (res, [cursor]) => {
         const { content, next } = res;
 
         if (!cursor && !content.length) {
@@ -87,15 +91,15 @@ const InviteView: FC<InviteViewInterface> = () => {
     alert.success('Code copied to clipboard!');
   };
 
-  const handleShareTwitter = () => {
+  const handleShareTwitter = async () => {
     if (!userInfo) return;
-    const tweetText = `🌳 I just started my forest in Mint Forest V3 — a fun Web3 game where you grow, earn, and explore!\n\nUse my invite code ${
-      userInfo.inviteCode
-    } to join and start collecting rewards with me!\n\n🚀 Let’s build a forest together: ${getInviteUrl(
-      userInfo.inviteCode
-    )}\n\n#MintBlockchain #Web3Gaming`;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-    window.open(twitterUrl, '_blank');
+    const inviteUrl = `${window.location.origin}/mint-forest?inviteCode=${encodeURIComponent(userInfo.inviteCode)}`;
+    if (navigator.share) {
+      await navigator.share({ title: 'Mint Forest Demo', text: `Join my local Mint Forest demo: ${userInfo.inviteCode}`, url: inviteUrl });
+      return;
+    }
+    copy(inviteUrl);
+    alert.success('Local invite link copied to clipboard.');
   };
 
   const onReachBottom = useCallback(() => {

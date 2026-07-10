@@ -4,7 +4,7 @@ import moment from 'moment';
 import parse from 'html-react-parser';
 import { motion } from 'motion/react';
 import { HttpCode } from '@/shared/const';
-import { useAlert, useAxios } from '@/shared/hooks';
+import { useAlert } from '@/shared/hooks';
 import CommonEmpty from '@/shared/components/common-empty.component';
 import CommonImg from '@/shared/components/common-img.component';
 import ScrollBox from '@/shared/components/scroll-box.component';
@@ -14,6 +14,9 @@ import TaskResultView from './task-result-modal';
 import { BtDoneSvg } from '@/shared/svg';
 import { NotifyEvent, notifyService } from '@/shared/services/notify.service';
 import { formatNumber } from '@/shared/utils';
+import type { TaskVerifyResult } from '../../types/api';
+import { mintForestGateway } from '../../data/runtime';
+import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 
 interface TaskItem {
   id: number;
@@ -55,14 +58,15 @@ const TaskView: FC<TaskViewInterface> = (props) => {
   const [mf, setMf] = useState<number>(0);
   const [activeStatus, setActiveStatus] = useState(false);
 
-  const { run: queryTask } = useAxios(
+  const { run: queryTask } = useDemoRequest<TaskItem[], [number]>(
     (type) => ({
       url: '/api/forest/task/list',
-      method: 'get',
+      method: 'GET',
       params: { type },
     }),
     {
-      onSuccess: (res: TaskItem[]) => {
+      gateway: mintForestGateway,
+      onSuccess: (res) => {
         setTasks(res);
         setStatus(res.length ? HttpCode.Success : HttpCode.NoData);
       },
@@ -72,18 +76,18 @@ const TaskView: FC<TaskViewInterface> = (props) => {
     }
   );
 
-  const { run: checkFollowX } = useAxios(
+  const { run: checkFollowX } = useDemoRequest<TaskVerifyResult, [number]>(
     () => ({
       url: '/api/forest/task/checkFollowX',
-      method: 'get',
+      method: 'GET',
     }),
     {
-      original: true,
-      onSuccess: (res: any, [mf]: any[]) => {
-        setMf(mf);
+      gateway: mintForestGateway,
+      onSuccess: (res, [mf]) => {
+        setMf(res.reward || mf);
         setTaskResultVisible(true);
       },
-      onError: (error: any) => {
+      onError: (error) => {
         alert.error(error.msg || 'Failed to check Follow X task');
       },
     }
@@ -114,7 +118,6 @@ const TaskView: FC<TaskViewInterface> = (props) => {
       return;
     }
     if (task.id === 2) {
-      window.open('https://x.com/Mint_Blockchain', '_blank');
       checkFollowX(task.mf);
       return;
     }
