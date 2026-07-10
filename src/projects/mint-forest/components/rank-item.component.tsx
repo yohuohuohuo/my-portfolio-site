@@ -1,6 +1,6 @@
-import CommonImg from '@/shared/components/common-img.component';
-import { useCurrentUserInfo, useMobile } from '@/shared/hooks';
-import { ellipsis, isEmpty } from '@/shared/utils';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { useCurrentUserInfo, useMobile } from '@/projects/mint-forest/hooks';
+import { ellipsis, isEmpty } from '@/projects/mint-forest/utils';
 import Avatar from 'boring-avatars';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';

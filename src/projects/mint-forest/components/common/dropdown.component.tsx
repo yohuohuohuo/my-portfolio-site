@@ -1,4 +1,4 @@
-import { isEmpty } from '@/shared/utils';
+import { isEmpty } from '@/projects/mint-forest/utils';
 import classNames from 'classnames';
 import React, {
   PropsWithChildren,

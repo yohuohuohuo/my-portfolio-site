@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 import { debounceTime, fromEvent } from 'rxjs'
-import { ScrollCallbackData } from '../hooks'
+import { ScrollCallbackData } from '../../hooks'
 
 interface ScrollBoxType
   extends React.DetailedHTMLProps<

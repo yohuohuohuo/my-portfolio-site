@@ -1,10 +1,10 @@
-import CommonButton from '@/shared/components/common-button.component';
-import CommonImg from '@/shared/components/common-img.component';
-import { useAlert, useCurrentUserInfo, useMobile, usePreloadImg } from '@/shared/hooks';
-import { GreenIdStatusEnum } from '@/shared/interfaces';
-import { NotifyEvent, notifyService } from '@/shared/services/notify.service';
-import { CloseSvg } from '@/shared/svg';
-import { setTimeoutPlus } from '@/shared/utils';
+import CommonButton from '@/projects/mint-forest/components/common/common-button.component';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { useAlert, useCurrentUserInfo, useMobile, usePreloadImg } from '@/projects/mint-forest/hooks';
+import { GreenIdStatusEnum } from '@/projects/mint-forest/types/api';
+import { NotifyEvent, notifyService } from '@/projects/mint-forest/services/notify.service';
+import { CloseSvg } from '@/projects/mint-forest/assets/svg';
+import { setTimeoutPlus } from '@/projects/mint-forest/utils';
 import classNames from 'classnames';
 import { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
@@ -310,7 +310,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
             <div className="w-[70%] h-[70%] green-id-box-light-anim absolute left-[50%] -translate-x-1/2 top-[50%] translate-y-[-50%] z-0"></div>
             <CommonImg
               className="w-auto h-[50px] lg:h-[70px] relative z-10 cursor-pointer"
-              src={'/forest/ic-box.png'}
+              src="/projects/mint-forest/images/ic-box.png"
               alt="green id box"
               onClick={show}
             />
@@ -432,7 +432,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
                   }}
                   onClick={close}
                 >
-                  <CommonImg local className="w-13 h-auto" src="/projects/mint-forest/images/nftscan-icon.png" alt="nftscan logo" />
+                  <CommonImg local className="w-13 h-auto" src="/projects/mint-forest/images/ic-box.png" alt="demo preview" />
                   <span className="text-base text-black text-nowrap">Local NFT Preview</span>
                 </CommonButton>
               ) : (

@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import CountDown from '@/shared/components/count-down.component';
-import LoadMore from '@/shared/components/loadmore/loadmore.component';
-import { useAlert, useOtherIndex } from '@/shared/hooks';
-import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
-import { isEmpty } from '@/shared/utils';
+import CountDown from '@/projects/mint-forest/components/common/count-down.component';
+import LoadMore from '@/projects/mint-forest/components/common/loadmore/loadmore.component';
+import { useAlert, useOtherIndex } from '@/projects/mint-forest/hooks';
+import { useGlobalConfig } from '@/projects/mint-forest/hooks/use-global-config.hook';
+import { isEmpty } from '@/projects/mint-forest/utils';
 import classNames from 'classnames';
 import moment from 'moment';
 import Image from 'next/image';

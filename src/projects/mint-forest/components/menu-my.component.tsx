@@ -1,5 +1,5 @@
-import CommonImg from '@/shared/components/common-img.component';
-import CommonModal from '@/shared/components/common-modal.component';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import CommonModal from '@/projects/mint-forest/components/common/common-modal.component';
 import { FC, useState } from 'react';
 import PortfolioView from '../sections/views/portfolio-view';
 import UnReadDot from './unread-dot.component';

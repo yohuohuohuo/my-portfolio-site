@@ -1,6 +1,6 @@
 import { FC, HTMLAttributes, useEffect, useRef } from 'react';
 import { useCountUp } from 'react-countup';
-import { formatNumber } from '../utils';
+import { formatNumber } from '../../utils';
 
 interface NumberCountInterface {
   number: number;

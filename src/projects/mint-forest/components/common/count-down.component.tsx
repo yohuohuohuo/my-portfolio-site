@@ -1,4 +1,4 @@
-import { formatDuring } from '@/shared/utils';
+import { formatDuring } from '@/projects/mint-forest/utils';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 interface CountDownInterface {

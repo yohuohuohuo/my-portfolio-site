@@ -1,4 +1,4 @@
-import { AreaRect } from '@/shared/const/scene.const';
+import { AreaRect } from '@/projects/mint-forest/config/scene.config';
 import { clone, random, round } from 'lodash';
 import { CSSProperties } from 'react';
 import { isEmpty } from '../common.util';

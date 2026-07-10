@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import CommonEmpty from '@/shared/components/common-empty.component';
-import ScrollBox from '@/shared/components/scroll-box.component';
-import { HttpCode } from '@/shared/const';
-import { isEmpty } from '@/shared/utils';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
+import ScrollBox from '@/projects/mint-forest/components/common/scroll-box.component';
+import { HttpCode } from '@/projects/mint-forest/types/api';
+import { isEmpty } from '@/projects/mint-forest/utils';
 import moment from 'moment';
 import Link from 'next/link';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';

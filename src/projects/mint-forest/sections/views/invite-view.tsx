@@ -1,12 +1,12 @@
-import ScrollBox from '@/shared/components/scroll-box.component';
-import CommonEmpty from '@/shared/components/common-empty.component';
-import { CopySvg, ITwitterSvg } from '@/shared/svg';
+import ScrollBox from '@/projects/mint-forest/components/common/scroll-box.component';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
+import { CopySvg, ITwitterSvg } from '@/projects/mint-forest/assets/svg';
 import { FC, useCallback, useState, useEffect } from 'react';
 import { useClipboard } from 'use-clipboard-copy';
-import { HttpCode } from '@/shared/const';
-import { useAlert } from '@/shared/hooks';
+import { HttpCode } from '@/projects/mint-forest/types/api';
+import { useAlert } from '@/projects/mint-forest/hooks';
 import moment from 'moment';
-import { ellipsis } from '@/shared/utils';
+import { ellipsis } from '@/projects/mint-forest/utils';
 import Link from 'next/link';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';

@@ -1,8 +1,8 @@
-import LoadMore from '@/shared/components/loadmore/loadmore.component';
-import { AreaRect } from '@/shared/const/scene.const';
-import { useCurrentLevel, useGlobalStore, usePreloadImg, useResize } from '@/shared/hooks';
-import { easeOutQuad, getPerFrameValue, setTimeoutPlus } from '@/shared/utils/animation.util';
-import { covetPoint, getRandomBird } from '@/shared/utils/business/map.helper';
+import LoadMore from '@/projects/mint-forest/components/common/loadmore/loadmore.component';
+import { AreaRect } from '@/projects/mint-forest/config/scene.config';
+import { useCurrentLevel, useGlobalStore, usePreloadImg, useResize } from '@/projects/mint-forest/hooks';
+import { easeOutQuad, getPerFrameValue, setTimeoutPlus } from '@/projects/mint-forest/utils/animation.util';
+import { covetPoint, getRandomBird } from '@/projects/mint-forest/utils/business/map.helper';
 import { clamp, random } from 'lodash';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';

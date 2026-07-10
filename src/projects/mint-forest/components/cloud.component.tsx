@@ -1,5 +1,5 @@
-import CommonImg from '@/shared/components/common-img.component';
-import { isEmpty } from '@/shared/utils';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { isEmpty } from '@/projects/mint-forest/utils';
 import { motion } from 'motion/react';
 import { FC, useEffect, useRef, useState } from 'react';
 

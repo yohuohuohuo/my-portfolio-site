@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import LoadMore from '@/shared/components/loadmore/loadmore.component';
+import LoadMore from '@/projects/mint-forest/components/common/loadmore/loadmore.component';
 import {
   useAlert,
   useCurrentUserInfo,
   useScaleValue,
-} from '@/shared/hooks';
-import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
+} from '@/projects/mint-forest/hooks';
+import { useGlobalConfig } from '@/projects/mint-forest/hooks/use-global-config.hook';
 import type { SpinResult } from '../../types/api';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
@@ -18,8 +18,8 @@ import {
   SpinPointerSvg,
   SpinSvg,
   SpinTitleSvg,
-} from '@/shared/svg';
-import { formatNumber, isEmpty } from '@/shared/utils';
+} from '@/projects/mint-forest/assets/svg';
+import { formatNumber, isEmpty } from '@/projects/mint-forest/utils';
 import classNames from 'classnames';
 import { FC, useEffect, useMemo, useState } from 'react';
 import Modal from 'react-modal';

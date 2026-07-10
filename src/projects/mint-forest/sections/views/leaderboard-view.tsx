@@ -1,12 +1,12 @@
-import LinearSpan from '@/shared/components/linear-span.component';
-import { SearchSvg } from '@/shared/svg';
-import ScrollBox from '@/shared/components/scroll-box.component';
-import CommonEmpty from '@/shared/components/common-empty.component';
+import LinearSpan from '@/projects/mint-forest/components/common/linear-span.component';
+import { SearchSvg } from '@/projects/mint-forest/assets/svg';
+import ScrollBox from '@/projects/mint-forest/components/common/scroll-box.component';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
 import { CSSProperties, FC, useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import SearchBox from '../../components/search-box.component';
 import Modal from 'react-modal';
-import { HttpCode } from '@/shared/const';
-import { useCurrentUserInfo } from '@/shared/hooks';
+import { HttpCode } from '@/projects/mint-forest/types/api';
+import { useCurrentUserInfo } from '@/projects/mint-forest/hooks';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 import RankItem from '../../components/rank-item.component';

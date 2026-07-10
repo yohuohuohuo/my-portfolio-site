@@ -1,4 +1,4 @@
-import { useGlobalStore } from '@/shared/hooks';
+import { useGlobalStore } from '@/projects/mint-forest/hooks';
 import classNames from 'classnames';
 import { FC } from 'react';
 import { useShallow } from 'zustand/react/shallow';

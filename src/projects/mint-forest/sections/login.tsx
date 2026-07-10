@@ -1,11 +1,11 @@
-import CommonButton from '@/shared/components/common-button.component';
-import CommonImg from '@/shared/components/common-img.component';
-import LoadMore from '@/shared/components/loadmore/loadmore.component';
-import { BaseModalStyle } from '@/shared/const';
-import { useAlert } from '@/shared/hooks';
+import CommonButton from '@/projects/mint-forest/components/common/common-button.component';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import LoadMore from '@/projects/mint-forest/components/common/loadmore/loadmore.component';
+import { BaseModalStyle } from '@/projects/mint-forest/config/modal.config';
+import { useAlert } from '@/projects/mint-forest/hooks';
 import { useSearchUser } from '../hooks/use-search-user';
 import { useMintForestStore } from '../store/use-mint-forest-store';
-import { ArrowSvg } from '@/shared/svg';
+import { ArrowSvg } from '@/projects/mint-forest/assets/svg';
 import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useRef, useState } from 'react';
@@ -14,7 +14,7 @@ interface LoginInterface {}
 
 const Login: FC<LoginInterface> = () => {
   const { isReady, query } = useRouter();
-  const { hydrated, pageStatus, token, userInfo, hydrate, login, setState, setOtherUserInfo } = useMintForestStore();
+  const { hydrated, pageStatus, token, userInfo, hydrate, login, setState, setOtherUserInfo, clearSelectedForest } = useMintForestStore();
   const alert = useAlert();
   const [loadStatus, setLoadStatus] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +37,11 @@ const Login: FC<LoginInterface> = () => {
     const greenId = Array.isArray(query.id) ? query.id[0] : query.id;
     queryOtherUserInfo(greenId);
   }, [isReady, query.id, queryOtherUserInfo, token]);
+
+  useEffect(() => {
+    if (!isReady || query.id) return;
+    clearSelectedForest();
+  }, [clearSelectedForest, isReady, query.id]);
 
   const onLoginClick = async () => {
     if (token && userInfo) {

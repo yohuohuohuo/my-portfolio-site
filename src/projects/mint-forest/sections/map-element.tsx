@@ -1,5 +1,5 @@
-import { AreaRect, LandConfig } from '@/shared/const/scene.const';
-import { useCurrentLevel, useGlobalStore } from '@/shared/hooks';
+import { AreaRect, LandConfig } from '@/projects/mint-forest/config/scene.config';
+import { useCurrentLevel, useGlobalStore } from '@/projects/mint-forest/hooks';
 import { FC, RefObject, useEffect, useState } from 'react';
 import Area from '../components/area.component';
 

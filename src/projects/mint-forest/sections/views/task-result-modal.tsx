@@ -1,10 +1,10 @@
-import { BaseModalStyle } from '@/shared/const';
-import { IRightSvg } from '@/shared/svg';
+import { BaseModalStyle } from '@/projects/mint-forest/config/modal.config';
+import { IRightSvg } from '@/projects/mint-forest/assets/svg';
 import { FC } from 'react';
 import ReactModal from 'react-modal';
 import { motion } from 'motion/react';
-import { useMobile } from '@/shared/hooks';
-import { formatNumber } from '@/shared/utils';
+import { useMobile } from '@/projects/mint-forest/hooks';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import GoButton from '../../components/go-button.component';
 
 interface TaskResultViewProps {

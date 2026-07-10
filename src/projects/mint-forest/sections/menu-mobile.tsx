@@ -1,4 +1,4 @@
-import CommonImg from '@/shared/components/common-img.component';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
 import classNames from 'classnames';
 import { motion } from 'motion/react';
 import { FC, useMemo, useState } from 'react';

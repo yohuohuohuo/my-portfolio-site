@@ -1,16 +1,16 @@
-import CommonImg from '@/shared/components/common-img.component';
-import { ArrowSvg } from '@/shared/svg';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { ArrowSvg } from '@/projects/mint-forest/assets/svg';
 import Link from 'next/link';
 import { FC, useCallback, useEffect, useState } from 'react';
 import TaskResultView from './task-result-modal';
 import parse from 'html-react-parser';
-import { useAlert } from '@/shared/hooks';
-import { HttpCode } from '@/shared/const';
+import { useAlert } from '@/projects/mint-forest/hooks';
+import { HttpCode } from '@/projects/mint-forest/types/api';
 import moment from 'moment';
-import LoadMore from '@/shared/components/loadmore/loadmore.component';
-import CommonEmpty from '@/shared/components/common-empty.component';
+import LoadMore from '@/projects/mint-forest/components/common/loadmore/loadmore.component';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
 import GoButton from '../../components/go-button.component';
-import { formatNumber } from '@/shared/utils';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import type { TaskVerifyResult } from '../../types/api';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
@@ -229,7 +229,7 @@ const TaskDetailView: FC<TaskDetailViewProps> = ({ id, onBack }) => {
                     onChange={(e) => setVerifyInput(e.target.value)}
                     className="flex-1 h-full rounded-[11px] bg-[#E6A55A] lg:pl-8 pl-2 text-black placeholder:text-[#A45118] lg:text-[14px] text-[12px] w-full lg:w-auto"
                   />
-                  {<GoButton className="!w-36" text={verifyLoading ? <LoadMore /> : 'Verify'} onClick={handleVerify} />}
+                  {<GoButton testId="task-verify" className="!w-36" text={verifyLoading ? <LoadMore /> : 'Verify'} onClick={handleVerify} />}
                 </div>
               )}
 
@@ -240,6 +240,7 @@ const TaskDetailView: FC<TaskDetailViewProps> = ({ id, onBack }) => {
                       <p className="text-[#A45118] text-[14px] lg:text-[14px] font-bold flex justify-between items-center">
                         Links
                         <GoButton
+                          testId={id === 3 ? 'task-verify-discord' : undefined}
                           text={goLoading ? <LoadMore className="block lg:hidden" /> : id === 3 ? 'Verify' : 'Go'}
                           className="block lg:hidden !w-36"
                           onClick={handleTask}
@@ -252,6 +253,7 @@ const TaskDetailView: FC<TaskDetailViewProps> = ({ id, onBack }) => {
                   )}
                 </div>
                 <GoButton
+                  testId={id === 3 ? 'task-verify-discord' : undefined}
                   text={goLoading ? <LoadMore className="lg:block hidden" /> : id === 3 ? 'Verify' : 'Go'}
                   className="lg:block hidden !w-36"
                   onClick={handleTask}

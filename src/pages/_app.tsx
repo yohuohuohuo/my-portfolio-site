@@ -1,4 +1,3 @@
-import Alert from '@/shared/components/alert.component';
 import '@/projects/mint-forest/styles/animations.scss';
 import '@/projects/mint-forest/styles/rc-dropdown.scss';
 import '@/projects/mint-forest/styles/theme.scss';
@@ -37,7 +36,6 @@ export default function App({ Component, pageProps }: AppProps) {
         `}
       </Style>
       {page}
-      <Alert />
     </>
   );
 }

@@ -10,6 +10,12 @@ export enum HttpCode {
 
 export type AuthType = 'Required' | 'Optional' | 'Ignored';
 
+export enum GreenIdStatusEnum {
+  NoGreenId = 'no_greenid',
+  NotActive = 'not_active',
+  Actived = 'actived',
+}
+
 export interface IUserInfo {
   greenId: number;
   greenIdStatus: number;

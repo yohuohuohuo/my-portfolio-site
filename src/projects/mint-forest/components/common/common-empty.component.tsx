@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { MintSmalllogoSvg } from '@/shared/svg';
+import { MintSmalllogoSvg } from '@/projects/mint-forest/assets/svg';
 import { FC } from 'react';
-import { isEmpty } from '@/shared/utils';
+import { isEmpty } from '@/projects/mint-forest/utils';
 import LoadMore from './loadmore/loadmore.component';
-import { HttpCode } from '../const';
+import { HttpCode } from '../../types/api';
 
 interface CommonEmptyInterface {
   status?: HttpCode | 'loading';

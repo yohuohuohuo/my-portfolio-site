@@ -1,4 +1,4 @@
-import { SoundSvg } from '@/shared/svg';
+import { SoundSvg } from '@/projects/mint-forest/assets/svg';
 import classNames from 'classnames';
 import { motion } from 'motion/react';
 import { FC, useEffect, useRef, useState } from 'react';

@@ -12,10 +12,7 @@
     "verify:runtime": "node scripts/audit-runtime-dependencies.mjs"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.69",
     "@use-gesture/react": "^10.3.1",
-    "axios": "^1.8.1",
-    "big.js": "^6.2.2",
     "boring-avatars": "^1.11.2",
     "classnames": "^2.5.1",
     "html-react-parser": "^5.2.3",
@@ -30,8 +27,6 @@
     "react-modal": "^3.16.3",
     "react-tiny-popover": "^8.1.6",
     "rxjs": "^7.8.2",
-    "svg-path-properties": "^1.3.0",
-    "twitter-api-sdk": "^1.2.1",
     "two.js": "^0.8.17",
     "ua-parser-js": "^2.0.3",
     "use-clipboard-copy": "^0.2.0",
@@ -40,7 +35,6 @@
   "devDependencies": {
     "@playwright/test": "^1.61.1",
     "@svgr/webpack": "^8.1.0",
-    "@types/big.js": "^6.2.2",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20.14.8",
     "@types/react": "^19.0.6",

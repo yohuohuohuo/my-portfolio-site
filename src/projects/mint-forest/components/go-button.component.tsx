@@ -5,10 +5,12 @@ const GoButton = ({
   onClick,
   text = 'Go',
   className,
+  testId,
 }: {
   onClick: () => void;
   text?: ReactNode;
   className?: string;
+  testId?: string;
 }) => {
   return (
     <div
@@ -16,6 +18,7 @@ const GoButton = ({
         'w-fit lg:min-w-28 min-w-24 h-18 p-1 bg-white rounded-[12px] cursor-pointer hover:brightness-110',
         className
       )}
+      data-testid={testId}
       style={{
         boxShadow: '0px 1px 2px 0px #DBAC65',
       }}

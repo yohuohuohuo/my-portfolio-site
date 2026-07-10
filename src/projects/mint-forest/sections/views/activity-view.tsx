@@ -1,13 +1,13 @@
-import LinearSpan from '@/shared/components/linear-span.component';
-import ScrollBox from '@/shared/components/scroll-box.component';
-import CommonEmpty from '@/shared/components/common-empty.component';
+import LinearSpan from '@/projects/mint-forest/components/common/linear-span.component';
+import ScrollBox from '@/projects/mint-forest/components/common/scroll-box.component';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
 import { FC, useEffect, useState, useCallback } from 'react';
-import { HttpCode } from '@/shared/const';
+import { HttpCode } from '@/projects/mint-forest/types/api';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
 import moment from 'moment';
-import { formatNumber } from '@/shared/utils';
-import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
+import { formatNumber } from '@/projects/mint-forest/utils';
+import { useGlobalConfig } from '@/projects/mint-forest/hooks/use-global-config.hook';
 import { useShallow } from 'zustand/react/shallow';
 
 interface ActivityItem {

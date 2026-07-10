@@ -180,7 +180,7 @@ function routeRequest(repository: Repository, request: DemoRequest): DemoApiResp
 
     case '/api/forest/task/list':
       if (!methodIs(request, 'GET')) return failure(HttpCode.InvalidMethod, 'This demo endpoint only accepts GET.');
-      return success({ content: clone(state.tasks), next: '' });
+      return success(clone(state.tasks));
 
     case '/api/forest/normal/getUserInviteData':
       if (!methodIs(request, 'GET')) return failure(HttpCode.InvalidMethod, 'This demo endpoint only accepts GET.');

@@ -1,9 +1,9 @@
-import { BaseModalStyle } from '@/shared/const';
+import { BaseModalStyle } from '@/projects/mint-forest/config/modal.config';
 import { motion } from 'motion/react';
 import { FC, PropsWithChildren } from 'react';
 import Modal from 'react-modal';
-import { useMobile } from '../hooks';
-import { CloseSvg } from '../svg';
+import { useMobile } from '../../hooks';
+import { CloseSvg } from '../../assets/svg';
 
 interface CommonModalProps {
   show: boolean;

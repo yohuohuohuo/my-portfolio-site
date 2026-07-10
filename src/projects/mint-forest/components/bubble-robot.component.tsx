@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import CommonImg from '@/shared/components/common-img.component';
-import { BubbleSvg, MintSmalllogoSvg } from '@/shared/svg';
-import { formatNumber } from '@/shared/utils';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { BubbleSvg, MintSmalllogoSvg } from '@/projects/mint-forest/assets/svg';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import classNames from 'classnames';
 import { random } from 'lodash';
 import { FC, useEffect, useState } from 'react';

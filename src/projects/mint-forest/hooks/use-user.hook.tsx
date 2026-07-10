@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useMintForestStore } from '../store/use-mint-forest-store';
 import { useGlobalConfig } from './use-global-config.hook';
-import { energyToLevel, isEmpty } from '@/shared/utils';
+import { energyToLevel, isEmpty } from '@/projects/mint-forest/utils';
 
 export const useOtherIndex = () => {
   const { query } = useRouter();

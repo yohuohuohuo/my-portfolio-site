@@ -1,8 +1,8 @@
-import CommonImg from '@/shared/components/common-img.component';
-import { useGlobalStore } from '@/shared/hooks';
-import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
-import { Arrow2Svg } from '@/shared/svg';
-import { formatNumber } from '@/shared/utils';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { useGlobalStore } from '@/projects/mint-forest/hooks';
+import { useGlobalConfig } from '@/projects/mint-forest/hooks/use-global-config.hook';
+import { Arrow2Svg } from '@/projects/mint-forest/assets/svg';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import Avatar from 'boring-avatars';
 import Link from 'next/link';
 import { FC } from 'react';

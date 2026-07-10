@@ -1,5 +1,5 @@
-import CommonImg from '@/shared/components/common-img.component';
-import { BuildingTitleBgSvg } from '@/shared/svg';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { BuildingTitleBgSvg } from '@/projects/mint-forest/assets/svg';
 import classNames from 'classnames';
 import { motion } from 'motion/react';
 import { FC } from 'react';

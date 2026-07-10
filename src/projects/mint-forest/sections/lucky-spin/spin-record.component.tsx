@@ -1,7 +1,7 @@
-import CommonEmpty from '@/shared/components/common-empty.component';
-import { HttpCode } from '@/shared/const';
-import { useGlobalStore, useMobile, useReachBottom } from '@/shared/hooks';
-import { isEmpty } from '@/shared/utils';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
+import { HttpCode } from '@/projects/mint-forest/types/api';
+import { useGlobalStore, useMobile, useReachBottom } from '@/projects/mint-forest/hooks';
+import { isEmpty } from '@/projects/mint-forest/utils';
 import moment from 'moment';
 import { FC, useEffect, useRef, useState } from 'react';
 import type { ActivityItem } from '../../types/api';

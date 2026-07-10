@@ -3,17 +3,17 @@ import classNames from 'classnames';
 import moment from 'moment';
 import parse from 'html-react-parser';
 import { motion } from 'motion/react';
-import { HttpCode } from '@/shared/const';
-import { useAlert } from '@/shared/hooks';
-import CommonEmpty from '@/shared/components/common-empty.component';
-import CommonImg from '@/shared/components/common-img.component';
-import ScrollBox from '@/shared/components/scroll-box.component';
+import { HttpCode } from '@/projects/mint-forest/types/api';
+import { useAlert } from '@/projects/mint-forest/hooks';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import ScrollBox from '@/projects/mint-forest/components/common/scroll-box.component';
 import TaskDetailView from './task-detail-view';
 import GoButton from '../../components/go-button.component';
 import TaskResultView from './task-result-modal';
-import { BtDoneSvg } from '@/shared/svg';
-import { NotifyEvent, notifyService } from '@/shared/services/notify.service';
-import { formatNumber } from '@/shared/utils';
+import { BtDoneSvg } from '@/projects/mint-forest/assets/svg';
+import { NotifyEvent, notifyService } from '@/projects/mint-forest/services/notify.service';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import type { TaskVerifyResult } from '../../types/api';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
@@ -194,6 +194,7 @@ const TaskView: FC<TaskViewInterface> = (props) => {
               {renderTasks.length > 0 &&
                 renderTasks.map((task) => (
                   <div
+                    data-testid={`task-card-${task.id}`}
                     key={task.id}
                     className="w-full bg-[#FFEFBE] rounded-[24px] p-8 flex items-center justify-between"
                     style={{
@@ -231,7 +232,7 @@ const TaskView: FC<TaskViewInterface> = (props) => {
                       </div>
                     </div>
                     {task.status === 0 ? (
-                      <GoButton className="shrink-0 lg:ml-40" onClick={() => handleOpenTaskDetail(task)} />
+                      <GoButton testId={`task-open-${task.id}`} className="shrink-0 lg:ml-40" onClick={() => handleOpenTaskDetail(task)} />
                     ) : (
                       <BtDoneSvg className="shrink-0" />
                     )}

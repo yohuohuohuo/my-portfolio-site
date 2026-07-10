@@ -1,8 +1,8 @@
 import ReactModal from 'react-modal';
-import CommonImg from '@/shared/components/common-img.component';
-import { CloseSvg, LeafSvg } from '@/shared/svg';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import { CloseSvg, LeafSvg } from '@/projects/mint-forest/assets/svg';
 import { FC } from 'react';
-import { formatNumber } from '@/shared/utils';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import GoButton from './go-button.component';
 
 interface OpenBoxModalProps {

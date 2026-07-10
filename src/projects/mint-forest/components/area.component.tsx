@@ -1,13 +1,13 @@
-import NoSSR from '@/shared/components/no-ssr.component';
-import { useCurrentLevel, useCurrentUserInfo, useOtherIndex } from '@/shared/hooks';
-import { areaToStyle, convertToBubble, generateBubbles, generateClouds, getAreaByLv, isEmpty } from '@/shared/utils';
+import NoSSR from '@/projects/mint-forest/components/common/no-ssr.component';
+import { useCurrentLevel, useCurrentUserInfo, useOtherIndex } from '@/projects/mint-forest/hooks';
+import { areaToStyle, convertToBubble, generateBubbles, generateClouds, getAreaByLv, isEmpty } from '@/projects/mint-forest/utils';
 import { clone } from 'lodash';
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import Bubble from './bubble.component';
 import Building from './building.component';
 import Cloud from './cloud.component';
 import { useRouter } from 'next/router';
-import { NotifyEvent, notifyService } from '@/shared/services/notify.service';
+import { NotifyEvent, notifyService } from '@/projects/mint-forest/services/notify.service';
 
 interface AreaInterface {
   lv: number;

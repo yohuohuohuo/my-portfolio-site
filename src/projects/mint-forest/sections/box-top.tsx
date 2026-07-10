@@ -1,6 +1,6 @@
-import Dropdown from '@/shared/components/dropdown.component';
-import { useAlert } from '@/shared/hooks';
-import { MenuCopySvg, MenuLogoutSvg } from '@/shared/svg';
+import Dropdown from '@/projects/mint-forest/components/common/dropdown.component';
+import { useAlert } from '@/projects/mint-forest/hooks';
+import { MenuCopySvg, MenuLogoutSvg } from '@/projects/mint-forest/assets/svg';
 import { FC, useRef } from 'react';
 import { useClipboard } from 'use-clipboard-copy';
 import BackGroundMusic from '../components/background-music';

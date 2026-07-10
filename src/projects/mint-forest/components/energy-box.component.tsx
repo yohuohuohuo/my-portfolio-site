@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import CommonImg from '@/shared/components/common-img.component';
-import CommonModal from '@/shared/components/common-modal.component';
-import NumberCount from '@/shared/components/number-count';
-import { useCurrentLevel, useCurrentUserInfo } from '@/shared/hooks';
-import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
-import { ArrowSvg } from '@/shared/svg';
-import { formatNumber } from '@/shared/utils';
+import CommonImg from '@/projects/mint-forest/components/common/common-img.component';
+import CommonModal from '@/projects/mint-forest/components/common/common-modal.component';
+import NumberCount from '@/projects/mint-forest/components/common/number-count';
+import { useCurrentLevel, useCurrentUserInfo } from '@/projects/mint-forest/hooks';
+import { useGlobalConfig } from '@/projects/mint-forest/hooks/use-global-config.hook';
+import { ArrowSvg } from '@/projects/mint-forest/assets/svg';
+import { formatNumber } from '@/projects/mint-forest/utils';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useMemo, useState } from 'react';

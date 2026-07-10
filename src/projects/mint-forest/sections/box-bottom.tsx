@@ -1,5 +1,5 @@
-import CommonModal from '@/shared/components/common-modal.component';
-import { useMobile } from '@/shared/hooks';
+import CommonModal from '@/projects/mint-forest/components/common/common-modal.component';
+import { useMobile } from '@/projects/mint-forest/hooks';
 import { FC, useState } from 'react';
 import GreenId from '../components/green-id.component';
 import MenuBox, { MenuItem, PrivateMenus, PublicMenus } from '../components/menu-box.component';

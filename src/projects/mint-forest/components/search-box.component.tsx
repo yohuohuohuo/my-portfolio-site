@@ -1,9 +1,9 @@
-import CommonEmpty from '@/shared/components/common-empty.component';
-import Dropdown from '@/shared/components/dropdown.component';
-import { useMobile } from '@/shared/hooks';
+import CommonEmpty from '@/projects/mint-forest/components/common/common-empty.component';
+import Dropdown from '@/projects/mint-forest/components/common/dropdown.component';
+import { useMobile } from '@/projects/mint-forest/hooks';
 import type { IUserInfo } from '../types/api';
 import { useSearchUser } from '../hooks/use-search-user';
-import { SearchSvg } from '@/shared/svg';
+import { SearchSvg } from '@/projects/mint-forest/assets/svg';
 import classNames from 'classnames';
 import { FC, useCallback, useRef, useState } from 'react';
 import RankItem from './rank-item.component';

@@ -1,5 +1,6 @@
-import { useOtherIndex, useResize } from '@/shared/hooks';
-import { STANDARD_SCREEN } from '@/shared/utils';
+import { useOtherIndex, useResize } from '@/projects/mint-forest/hooks';
+import { STANDARD_SCREEN } from '@/projects/mint-forest/utils';
+import Alert from './components/common/alert.component';
 import classNames from 'classnames';
 import type { NextPage } from 'next';
 import { useEffect } from 'react';
@@ -13,7 +14,6 @@ import { useGlobalConfig } from './hooks/use-global-config.hook';
 import { useMintForestStore } from './store/use-mint-forest-store';
 import { mintForestGateway } from './data/runtime';
 import StealHeader from './sections/steal-header';
-import OAuthValidator from './sections/validator';
 
 const Home: NextPage = () => {
   const { hydrated, token, pageStatus, setState, hydrate } = useMintForestStore();
@@ -71,13 +71,13 @@ const Home: NextPage = () => {
               <BoxTop />
               <BoxBottom />
               <MenuMobile />
-              <OAuthValidator />
             </>
           ) : (
             <StealHeader />
           )}
         </>
       )}
+      <Alert />
     </div>
   );
 };
