@@ -6,6 +6,8 @@
 项目根目录：`/Users/qiuyupan/git_workspace/my-portfolio-site`
 分支：`codex/portfolio-migration`
 
+最终本地预览：`http://127.0.0.1:3100/`
+
 本仓库已从 Mint Forest 前端改造成个人作品集结构。`/` 是最小入口，`/mint-forest` 是本地化交互子作品。当前没有 push、merge、rebase、发布或部署动作。
 
 当前 HEAD：
@@ -64,7 +66,7 @@ Task 8、Task 9、Task 10 的代码已通过阶段性本地 commit 保存；当�
 
 ```text
 npm run test:unit       3 test files, 18 tests passed
-npm run verify:routes   Route verification passed (5 routes)
+npm run verify:routes   Route verification passed (6 manifest routes: 2 public + 4 Next special routes)
 npm run verify:runtime  Runtime dependency audit passed
 npx tsc --noEmit        passed when run after build completion
 npm run build           exit 0; Next static generation completed

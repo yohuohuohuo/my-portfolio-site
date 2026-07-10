@@ -1116,18 +1116,18 @@ git log --oneline --decorate --max-count=20
 
 Expected: only intended final documentation changes remain unstaged; local commit history contains the baseline and phase commits; no remote action occurred.
 
-- [ ] **Step 7: Commit final docs and evidence summary**
+- [x] **Step 7: Commit final docs and evidence summary**
 
 ```bash
 git add README.md AGENTS.md HANDOFF.md
 git commit -m "docs: record portfolio migration verification"
 ```
 
-- [ ] **Step 8: Start the final local development server**
+- [x] **Step 8: Start the final local development server**
 
 Check whether port `3000` is free, then start `npm run dev -- --hostname 127.0.0.1 --port 3000` in a persistent session. If occupied, choose the next free port, re-open `/` and `/mint-forest` once, and record the actual local URL. Do not deploy or expose the server beyond localhost.
 
-- [ ] **Step 9: Produce the final report**
+- [x] **Step 9: Produce the final report**
 
 Report: changed architecture; commit hashes; all command results; browser viewports; network audit; removed Web3/OAuth/API/CDN dependencies; remaining interaction limitations; manual credential rotation; active local URL; no push/merge/deploy.
 
