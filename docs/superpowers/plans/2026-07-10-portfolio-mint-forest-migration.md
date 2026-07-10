@@ -685,19 +685,19 @@ git commit -m "feat: add deterministic Mint Forest state core"
 - Consumes: repository, rules, fixture DTOs.
 - Produces: the `DemoGateway` and request hook from the API Compatibility Map.
 
-- [ ] **Step 1: Write failing compatibility tests for every endpoint row**
+- [x] **Step 1: Write failing compatibility tests for every endpoint row**
 
 For each endpoint assert method/params, `code/msg/data`, required data fields, pagination cursor, no-data for unknown Forest ID, and persistent state after mutation. `/api/forest/user/auth`, `/api/forest/white/getForestConfig` and `/api/forest/normal/getForestNews` are callable before login; every other route returns `401` before local login.
 
-- [ ] **Step 2: Implement the endpoint router**
+- [x] **Step 2: Implement the endpoint router**
 
 Use an explicit switch/table over exact legacy paths, plus a parser for `/api/forest/task/detail/:id`. Unknown routes return `5004`. Required routes return `401` when `session.loggedIn` is false; auth, global config and news are explicitly ignored-auth routes. Add a fixed short asynchronous delay of `80ms` so existing loading states remain observable and deterministic.
 
-- [ ] **Step 3: Implement `useDemoRequest` with existing hook semantics**
+- [x] **Step 3: Implement `useDemoRequest` with existing hook semantics**
 
 Return `{ run, cancel, loading, status }`. Unwrap `response.data` before `onSuccess`, map `200/401/500/5001/5002/5003/5004` to the project-owned `HttpCode`, invoke `onError` with `{ code, msg }`, and prevent callbacks after `cancel()` or unmount.
 
-- [ ] **Step 4: Run gateway tests**
+- [x] **Step 4: Run gateway tests**
 
 ```bash
 npm run test:unit
