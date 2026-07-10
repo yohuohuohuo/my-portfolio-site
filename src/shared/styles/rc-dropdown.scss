@@ -1,0 +1,53 @@
+.rc-dropdown-animation {
+  transform-origin: 0 0;
+  transition: all 0.3s cubic-bezier(0.08, 0.82, 0.17, 1);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
+
+  &.show {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+.rc-dropdown-animation-reverse {
+  transform-origin: 0 0;
+  transition: all 0.3s cubic-bezier(0.08, 0.82, 0.17, 1);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+
+  &.show {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+.rc-dropdown-animation-header {
+  transform-origin: 0 0;
+  transition: all 0.3s cubic-bezier(0.08, 0.82, 0.17, 1);
+  opacity: 0;
+  transform: translateY(-30px);
+  transform-origin: top;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
