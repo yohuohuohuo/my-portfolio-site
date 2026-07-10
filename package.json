@@ -13,8 +13,6 @@
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.69",
-    "@rainbow-me/rainbowkit": "^2.2.3",
-    "@tanstack/react-query": "^5.55.3",
     "@use-gesture/react": "^10.3.1",
     "axios": "^1.8.1",
     "big.js": "^6.2.2",
@@ -37,8 +35,6 @@
     "two.js": "^0.8.17",
     "ua-parser-js": "^2.0.3",
     "use-clipboard-copy": "^0.2.0",
-    "viem": "2.21.55",
-    "wagmi": "^2.14.7",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

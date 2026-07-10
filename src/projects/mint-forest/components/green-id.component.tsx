@@ -1,9 +1,7 @@
 import CommonButton from '@/shared/components/common-button.component';
 import CommonImg from '@/shared/components/common-img.component';
-import { GreenIdAddress, shouldMintChain } from '@/shared/const';
-import { useAlert, useCheckWallet, useCurrentUserInfo, useMobile, usePreloadImg } from '@/shared/hooks';
+import { useAlert, useCurrentUserInfo, useMobile, usePreloadImg } from '@/shared/hooks';
 import { GreenIdStatusEnum } from '@/shared/interfaces';
-import { etherSvc } from '@/shared/services/ethers.service';
 import { NotifyEvent, notifyService } from '@/shared/services/notify.service';
 import { CloseSvg } from '@/shared/svg';
 import { setTimeoutPlus } from '@/shared/utils';
@@ -11,7 +9,8 @@ import classNames from 'classnames';
 import { CSSProperties, FC, useCallback, useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import { UAParser } from 'ua-parser-js';
-import { useSwitchChain } from 'wagmi';
+import { mintForestGateway } from '../data/runtime';
+import { useMintForestStore } from '../store/use-mint-forest-store';
 
 interface GreenIdInterface {}
 
@@ -26,11 +25,8 @@ enum Step {
 const GreenId: FC<GreenIdInterface> = (props) => {
   const currentUser = useCurrentUserInfo();
   const alert = useAlert();
-  const { switchChainAsync } = useSwitchChain();
-  const { valid } = useCheckWallet(shouldMintChain().id);
 
   const [showStep, setShowStep] = useState<Step>(Step.init);
-  const [networkLoading, setNetworkLoading] = useState(false);
   const [claimLoading, setClaimLoading] = useState(false);
   const [cardRoate, setCardRoate] = useState<CSSProperties>();
   const [canScale, setCanScale] = useState(false);
@@ -95,7 +91,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
     if (claimLoading || !currentUser) return;
     setClaimLoading(true);
     try {
-      const { success, msg } = await etherSvc.claimGreenId(currentUser.greenId);
+      const { success, msg } = await mintForestGateway.claimGreenId();
       if (success) {
         const url = '/projects/mint-forest/images/nft/greenid-demo.png';
         await preload([url]);
@@ -104,10 +100,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
         setCardRoate({ transform: 'rotateY(540deg) scale(1)' });
         setBoost(currentUser.greenIdSpeedAmounts);
         setGreenIdStatus(GreenIdStatusEnum.Actived);
-
-        setTimeout(() => {
-          notifyService.notify(NotifyEvent.USER_INFO_REFRESH);
-        }, 6000);
+        useMintForestStore.getState().syncFromRepository();
       } else {
         alert.error(msg);
       }
@@ -115,14 +108,6 @@ const GreenId: FC<GreenIdInterface> = (props) => {
       console.log(error);
     }
     setClaimLoading(false);
-  };
-
-  const onChangeNetworkClick = async () => {
-    if (!switchChainAsync) return;
-    setNetworkLoading(true);
-    switchChainAsync({ chainId: shouldMintChain().id }).finally(() => {
-      setNetworkLoading(false);
-    });
   };
 
   useEffect(() => {
@@ -159,7 +144,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
         setGreenIdStatus(GreenIdStatusEnum.NoGreenId);
         break;
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -292,7 +277,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
     };
   }, []);
 
-  if (!currentUser || greenIdStatus == GreenIdStatusEnum.NoGreenId) {
+  if (!currentUser) {
     return <></>;
   }
 
@@ -361,6 +346,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
           <div className="flex flex-col items-center justify-center w-[336px] h-[666px] lg:w-[380px] lg:h-[754px] relative">
             {showStep >= Step.showBt && (
               <div
+                data-testid="green-id-close"
                 className="text-white w-16 h-16 flex items-center justify-center absolute right-[-12px] top-[60px] lg:right-[-50px] lg:top-[100px] cursor-pointer z-50 rounded-full border border-white"
                 onClick={close}
               >
@@ -444,38 +430,23 @@ const GreenId: FC<GreenIdInterface> = (props) => {
                     background: 'linear-gradient(180deg, #0CDC50 0%, #D7FF35 100%)',
                     boxShadow: '0px 0px 24px 0px #11E055',
                   }}
-                  onClick={() => {
-                    window.open(`https://mint.nftscan.com/${GreenIdAddress}/${currentUser.greenId}`);
-                  }}
+                  onClick={close}
                 >
                   <CommonImg local className="w-13 h-auto" src="/projects/mint-forest/images/nftscan-icon.png" alt="nftscan logo" />
-                  <span className="text-base text-black text-nowrap">View on NFTScan</span>
+                  <span className="text-base text-black text-nowrap">Local NFT Preview</span>
                 </CommonButton>
               ) : (
                 <>
-                  {!valid ? (
-                    <CommonButton
-                      className={classNames(
-                        'min-w-[147px] h-22 rounded-xl px-12 flex items-center justify-center gap-5 transition-all duration-1000 text-base text-black',
-                        showStep >= Step.showBt ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
-                      )}
-                      loading={networkLoading}
-                      onClick={onChangeNetworkClick}
-                    >
-                      Change Network
-                    </CommonButton>
-                  ) : (
-                    <CommonButton
-                      className={classNames(
-                        'min-w-[147px] h-22 rounded-xl px-12 flex items-center justify-center gap-5 transition-all duration-1000 text-base text-black',
-                        showStep >= Step.showBt ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
-                      )}
-                      loading={claimLoading}
-                      onClick={claim}
-                    >
-                      Activate it
-                    </CommonButton>
-                  )}
+                  <CommonButton
+                    className={classNames(
+                      'min-w-[147px] h-22 rounded-xl px-12 flex items-center justify-center gap-5 transition-all duration-1000 text-base text-black',
+                      showStep >= Step.showBt ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+                    )}
+                    loading={claimLoading}
+                    onClick={claim}
+                  >
+                    Activate it
+                  </CommonButton>
                 </>
               )}
             </div>

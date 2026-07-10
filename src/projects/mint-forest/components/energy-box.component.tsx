@@ -79,7 +79,7 @@ const EnergyBox: FC<EnergyBoxInterface> = (props) => {
             onClick={onMenuClick}
           >
             <CommonImg local className="w-10 lg:w-14" src={'/projects/mint-forest/images/ic-mf.png'} alt="" />
-            <span className="text-lg lg:text-xl font-medium font-DINCond">
+            <span data-testid="mf-balance" className="text-lg lg:text-xl font-medium font-DINCond">
               <NumberCount className={'font-[inherit]'} number={Number(currentUser.mfTotalAmounts)} /> MF
             </span>
             <ArrowSvg className={'w-9 h-6 lg:w-12 lg:h-8'} />

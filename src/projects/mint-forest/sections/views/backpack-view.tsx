@@ -3,15 +3,15 @@ import CommonEmpty from '@/shared/components/common-empty.component';
 import CommonImg from '@/shared/components/common-img.component';
 import LoadMore from '@/shared/components/loadmore/loadmore.component';
 import { FC, useEffect, useState, useCallback } from 'react';
-import { GreenIdAddress, HttpCode, shouldMintChain } from '@/shared/const';
+import { HttpCode } from '@/shared/const';
 import OpenBoxModal from '../../components/openbox-modal.component';
-import { useAlert, useCheckWallet, useGlobalStore } from '@/shared/hooks';
+import { useAlert, useGlobalStore } from '@/shared/hooks';
 import moment from 'moment';
-import { etherSvc } from '@/shared/services/ethers.service';
 import { isEmpty } from '@/shared/utils';
 import { GreenIdStatusEnum } from '@/shared/interfaces';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
+import { useMintForestStore } from '../../store/use-mint-forest-store';
 
 interface NFTItem {
   contract: string;
@@ -71,7 +71,7 @@ const BoxImg: any = { 1: '/projects/mint-forest/images/pic-signin-box.png', 4: '
 interface BackPackViewInterface {}
 
 const BackPackView: FC<BackPackViewInterface> = () => {
-  const { updateTotalAmount, userInfo } = useGlobalStore();
+  const { userInfo } = useGlobalStore();
   const [nfts, setNfts] = useState<NFTItem[]>([]);
   const [boxes, setBoxes] = useState<BoxItem[]>([]);
   const [nftStatus, setNftStatus] = useState<HttpCode | 'loading' | undefined>('loading');
@@ -86,7 +86,6 @@ const BackPackView: FC<BackPackViewInterface> = () => {
   const [isLoadingBoxes, setIsLoadingBoxes] = useState(false);
   const [isLoadingNfts, setIsLoadingNfts] = useState(false);
   const alert = useAlert();
-  const { checkAndSwitch } = useCheckWallet(shouldMintChain().id);
 
   const { run: openBox } = useDemoRequest<OpenBoxResponse, [number]>(
     (boxNumber: number) => ({
@@ -96,31 +95,17 @@ const BackPackView: FC<BackPackViewInterface> = () => {
     }),
     {
       gateway: mintForestGateway,
-      onSuccess: async (res) => {
-        try {
-          const result = await etherSvc.openReward(res.signature, Number(res.speedAmount), res.boxNumber);
-          if (result.success) {
-            setReward(res.speedAmount);
-            updateTotalAmount(Number(res.speedAmount));
-            setModalVisible(true);
-            // 手动物理删除
-            const remainingBoxes = boxes.filter((box) => box.boxNumber !== res.boxNumber);
-            setBoxes(remainingBoxes);
-            if (!remainingBoxes.length) setBoxStatus(HttpCode.NoData);
-            setLoadingBoxIndex(null);
-          } else {
-            setLoadingBoxIndex(null);
-            alert.error(result.msg || 'Failed to open box');
-          }
-        } catch (error: any) {
-          alert.error(error.msg || 'Failed to open box');
-          console.error('Failed to open box:', error);
-          setLoadingBoxIndex(null);
-        }
+      onSuccess: (res) => {
+        setReward(res.speedAmount);
+        useMintForestStore.getState().syncFromRepository();
+        setModalVisible(true);
+        const remainingBoxes = boxes.filter((box) => box.boxNumber !== res.boxNumber);
+        setBoxes(remainingBoxes);
+        if (!remainingBoxes.length) setBoxStatus(HttpCode.NoData);
+        setLoadingBoxIndex(null);
       },
       onError: (error) => {
         alert.error(error.msg || 'Failed to open box');
-        console.error('Failed to open box:', error);
         setLoadingBoxIndex(null);
       },
     }
@@ -187,7 +172,7 @@ const BackPackView: FC<BackPackViewInterface> = () => {
           if (isEmpty(filterGreenId)) {
             currentList.unshift({
               nftUniqueNum: '',
-              contract: GreenIdAddress,
+              contract: 'demo-contract',
               tokenId: userInfo.greenId + '',
               name: `GreenID#${userInfo.greenId}`,
               speedAmount: '',
@@ -254,13 +239,7 @@ const BackPackView: FC<BackPackViewInterface> = () => {
     if (loadingBoxIndex) return;
     setLoadingBoxIndex(index);
 
-    checkAndSwitch((valid: boolean) => {
-      if (valid) {
-        openBox(box.boxNumber);
-      } else {
-        setLoadingBoxIndex(null);
-      }
-    });
+    openBox(box.boxNumber);
   };
 
   const handleCloseModal = () => {
@@ -308,6 +287,7 @@ const BackPackView: FC<BackPackViewInterface> = () => {
                 {boxes.length > 0 &&
                   boxes.map((box, index) => (
                     <div
+                      data-testid={`box-${box.boxNumber}`}
                       key={box.boxNumber}
                       className="bg-white rounded-[8px] p-4 cursor-pointer relative border border-[#DAE1D2]"
                       onClick={() => handleOpenBox(box, index)}

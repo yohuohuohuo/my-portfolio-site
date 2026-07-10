@@ -1,5 +1,4 @@
 import Alert from '@/shared/components/alert.component';
-import RainbowRoot from '@/shared/hooks/use-web3.hook';
 import '@/projects/mint-forest/styles/animations.scss';
 import '@/projects/mint-forest/styles/rc-dropdown.scss';
 import '@/projects/mint-forest/styles/theme.scss';
@@ -8,7 +7,6 @@ import type { AppProps } from 'next/app';
 import { Montserrat } from 'next/font/google';
 import localFont from 'next/font/local';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import Style from 'styled-jsx/style';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
@@ -19,8 +17,6 @@ const DINCond = localFont({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-  const isMintForest = router.pathname.startsWith('/mint-forest');
   const page = <Component {...pageProps} />;
 
   return (
@@ -40,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
           }
         `}
       </Style>
-      {isMintForest ? <RainbowRoot>{page}</RainbowRoot> : page}
+      {page}
       <Alert />
     </>
   );

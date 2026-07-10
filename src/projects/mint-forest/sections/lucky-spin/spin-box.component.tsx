@@ -1,18 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import LoadMore from '@/shared/components/loadmore/loadmore.component';
-import { shouldMintChain } from '@/shared/const';
 import {
   useAlert,
-  useClientAccount,
   useCurrentUserInfo,
-  useGlobalStore,
   useScaleValue,
 } from '@/shared/hooks';
 import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
 import type { SpinResult } from '../../types/api';
 import { mintForestGateway } from '../../data/runtime';
 import { useDemoRequest } from '../../hooks/use-demo-request.hook';
-import { etherSvc } from '@/shared/services/ethers.service';
+import { useMintForestStore } from '../../store/use-mint-forest-store';
 import {
   BubbleSvg,
   CloseSvg,
@@ -26,7 +23,6 @@ import { formatNumber, isEmpty } from '@/shared/utils';
 import classNames from 'classnames';
 import { FC, useEffect, useMemo, useState } from 'react';
 import Modal from 'react-modal';
-import { useSwitchChain } from 'wagmi';
 import { useShallow } from 'zustand/react/shallow';
 
 interface SpinBoxInterface {}
@@ -46,7 +42,6 @@ const SpinConfig = {
 
 const SpinBox: FC<SpinBoxInterface> = (props) => {
   const currentUser = useCurrentUserInfo();
-  const { updateUserInfo } = useGlobalStore();
   const {
     totalStealLimit: maxSpin,
     turntableConfig,
@@ -68,13 +63,11 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
     duration: 0,
     start: false,
   });
-  const { chainId } = useClientAccount();
-  const { switchChainAsync } = useSwitchChain();
 
   const energyRange = useMemo(() => {
     if (!turntableConfig) return [];
     return turntableConfig.map((item) => Number(item.amount)).reverse();
-  }, []);
+  }, [turntableConfig]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -115,13 +108,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
       gateway: mintForestGateway,
       onSuccess: async (data) => {
         if (isEmpty(data)) return;
-        const { success, msg } = await etherSvc.turntable(data.signature, data.turntableId, data.times);
-        if (!success) {
-          alert.error(msg);
-          setLoading(false);
-        } else {
-          start(data);
-        }
+        start(data);
       },
       onError: (e) => {
         alert.error(e.msg);
@@ -140,12 +127,6 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
 
     setLoading(true);
 
-    if (chainId !== shouldMintChain().id) {
-      switchChainAsync({ chainId: shouldMintChain().id }).finally(() => {
-        setLoading(false);
-      });
-      return;
-    }
     getSpinGift('');
   };
 
@@ -167,13 +148,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
       });
       setReward(amount);
 
-      if (currentUser && turntableSpent) {
-        updateUserInfo({
-          ...currentUser,
-          mfTotalAmounts: String(Number(currentUser.mfTotalAmounts) + (amount - turntableSpent)),
-          turntableTimes: Number(data.times),
-        });
-      }
+      useMintForestStore.getState().syncFromRepository();
 
       setLoading(false);
     }, 5000);
@@ -239,6 +214,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
                 className={classNames('relative cursor-pointer select-none transition-all origin-center group', {
                   '!cursor-not-allowed': loading || currentUser.turntableTimes == maxSpin,
                 })}
+                data-testid="spin-pointer"
                 onClick={onSpinPointerClick}
                 style={{
                   width: spinConfig.pointer,

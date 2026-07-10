@@ -819,35 +819,35 @@ git commit -m "refactor: use local session and read gateway"
 - Consumes: deterministic gateway mutation methods.
 - Produces: same UI animations and messages without chain IDs, wallets, signatures, hashes or receipts.
 
-- [ ] **Step 1: Write failing action E2E tests from a reset seed**
+- [x] **Step 1: Write failing action E2E tests from a reset seed**
 
 Cover GreenID success/duplicate; daily +120/duplicate; invite +80/duplicate; search 2001 and steal +60/duplicate; five deterministic spins and sixth failure; open box 501 +150 and removal; reload persistence after each class of mutation.
 
-- [ ] **Step 2: Replace GreenID chain flow**
+- [x] **Step 2: Replace GreenID chain flow**
 
 Remove network checks, `GreenIdAddress`, NFTScan link and `etherSvc.claimGreenId`. Call `gateway.claimGreenId()`, rehydrate user, preserve card/preload/claim animation and show duplicate failure.
 
-- [ ] **Step 3: Replace daily, invite and steal flows**
+- [x] **Step 3: Replace daily, invite and steal flows**
 
 Remove chain ID and switch network branches. Keep bubble loading, flying animation, frozen state, energy toast and steal-limit warning. Refresh from repository after mutation rather than manually calculating a second state copy.
 
-- [ ] **Step 4: Replace spin and box flows**
+- [x] **Step 4: Replace spin and box flows**
 
 Spin calls `gateway.spin()` and uses returned amount/times; preserve the 4-second wheel and reward modal. Open box calls gateway once, removes the box, updates balance/history and preserves reward modal. No signature fields are consumed.
 
-- [ ] **Step 5: Remove the Web3 wrapper, constants and exact source files**
+- [x] **Step 5: Remove the Web3 wrapper, constants and exact source files**
 
 Remove the temporary page runtime flag, RainbowRoot and RainbowKit stylesheet from `_app`. Remove chain definitions, RPC/explorer/bridge/swap URLs, addresses and contract exports from `src/shared/const/common.const.ts`; keep only still-used non-chain constants until Task 10. Delete the ABI, ethers and four hook files listed above, and clean their barrel exports after `rg` confirms no callers.
 
-- [ ] **Step 6: Remove direct Web3 dependencies with Yarn**
+- [x] **Step 6: Remove direct Web3 dependencies with Yarn**
 
 ```bash
 yarn remove @rainbow-me/rainbowkit @tanstack/react-query wagmi viem
 ```
 
-Expected: `package.json`/`yarn.lock` update; no package-lock.
+Expected: `package.json`/`yarn.lock` update; no package-lock. `yarn remove` completed manifest removal but its reinstall phase was blocked by the local proxy while fetching the existing optional `@napi-rs/canvas` binaries; the four direct lock entries were removed in the same Yarn v1 lockfile format, and no package-lock was created.
 
-- [ ] **Step 7: Run action verification and build**
+- [x] **Step 7: Run action verification and build**
 
 ```bash
 npm run test:unit

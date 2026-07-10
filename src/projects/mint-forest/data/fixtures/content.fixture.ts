@@ -31,6 +31,10 @@ export function createConfigFixture(): ForestConfigItem[] {
       config: [{ amount: String(DEMO_VALUES.totalStealLimit), id: 0, kind: 0, name: 'Steal limit', unit: '' }],
     },
     {
+      type: 'CONFIG_TURNTABLE_LIMIT_TIMES',
+      config: [{ amount: String(DEMO_VALUES.maxSpin), id: 0, kind: 0, name: 'Turntable limit', unit: '' }],
+    },
+    {
       type: 'CONFIG_TURNTABLE_SUBTRACT_MF',
       config: [{ amount: String(DEMO_VALUES.spinCost), id: 0, kind: 0, name: 'Spin cost', unit: 'MF' }],
     },

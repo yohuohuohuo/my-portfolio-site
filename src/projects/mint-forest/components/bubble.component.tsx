@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import CountDown from '@/shared/components/count-down.component';
 import LoadMore from '@/shared/components/loadmore/loadmore.component';
-import { shouldMintChain } from '@/shared/const';
-import { useAlert, useClientAccount, useGlobalStore, useOtherIndex } from '@/shared/hooks';
+import { useAlert, useOtherIndex } from '@/shared/hooks';
 import { useGlobalConfig } from '@/shared/hooks/use-global-config.hook';
-import { etherSvc } from '@/shared/services/ethers.service';
 import { isEmpty } from '@/shared/utils';
 import classNames from 'classnames';
 import moment from 'moment';
 import Image from 'next/image';
 import { CSSProperties, FC, useEffect, useMemo, useState } from 'react';
-import { useSwitchChain } from 'wagmi';
+import { mintForestGateway } from '../data/runtime';
+import { useMintForestStore } from '../store/use-mint-forest-store';
 import BubbleRobot from './bubble-robot.component';
 import { clone } from 'lodash';
 
@@ -26,15 +25,13 @@ interface BubbleInterface {
 const Bubble: FC<BubbleInterface> = (props) => {
   const [itemData, setItemData] = useState<BubbleData | undefined>();
   const totalStealLimit = useGlobalConfig((state) => state.totalStealLimit);
-  const { otherUserInfo, userInfo, updateTotalAmount, updateUserInfo } = useGlobalStore();
+  const { otherUserInfo, userInfo } = useMintForestStore();
   const alert = useAlert();
   const isOtherIndex = useOtherIndex();
 
   const [collectedStatus, setCollectedStatus] = useState<'initial' | 'scale' | 'done'>('initial');
   const [countDate, setCountDate] = useState<Array<number>>();
   const [loading, setLoading] = useState(false);
-  const { chainId } = useClientAccount();
-  const { switchChainAsync } = useSwitchChain();
 
   useEffect(() => {
     setItemData(props.itemData);
@@ -45,13 +42,6 @@ const Bubble: FC<BubbleInterface> = (props) => {
       return;
     }
     setLoading(true);
-
-    if (chainId !== shouldMintChain().id) {
-      switchChainAsync({ chainId: shouldMintChain().id }).finally(() => {
-        setLoading(false);
-      });
-      return;
-    }
 
     if (itemData.data.type === 'daily') {
       dailyClaim();
@@ -85,47 +75,31 @@ const Bubble: FC<BubbleInterface> = (props) => {
   }, [itemData]);
 
   const inviteClaim = async () => {
-    if (!userInfo || !userInfo.inviteSignature || !itemData || !itemData.data) return;
+    if (!userInfo || !itemData || !itemData.data) return;
     const amount = Number(userInfo.mfInviteAmounts);
-    const { success, msg } = await etherSvc.inviteClaim(userInfo.inviteSignature, amount || 1);
+    const { success, msg } = await mintForestGateway.claimInvite();
     setLoading(false);
     if (!success) {
       alert.error(msg);
     } else {
       showAnimation();
-      if (amount !== 1) {
-        updateUserInfo({
-          ...userInfo,
-          mfInviteStatus: 1,
-          mfTotalAmounts: String(Number(userInfo?.mfTotalAmounts || 0) + amount),
-        });
-        alert.energyToast('collect', amount);
-      } else {
-        alert.energyToast('collect', 0);
-      }
-
-      // notifyService.notify(NotifyEvent.CLAIM_COMPLETE, itemData.data.id);
+      useMintForestStore.getState().syncFromRepository();
+      alert.energyToast('collect', amount);
     }
   };
 
   const dailyClaim = async () => {
     if (!userInfo || !itemData || !itemData.data) return;
     const amount = Number(userInfo.mfDailyAmounts);
-    const { success, msg } = await etherSvc.signin(userInfo.signature, amount);
+    const { success, msg } = await mintForestGateway.claimDaily();
     setLoading(false);
     if (!success) {
       alert.error(msg);
     } else {
       showAnimation();
 
-      updateUserInfo({
-        ...userInfo,
-        mfDailyStatus: 1,
-        mfTotalAmounts: String(Number(userInfo?.mfTotalAmounts || 0) + amount),
-      });
-      alert.energyToast('collect', userInfo.mfDailyAmounts);
-
-      // notifyService.notify(NotifyEvent.CLAIM_COMPLETE, itemData.data.id);
+      useMintForestStore.getState().syncFromRepository();
+      alert.energyToast('collect', amount);
     }
   };
 
@@ -134,7 +108,7 @@ const Bubble: FC<BubbleInterface> = (props) => {
 
     const amount = Number(otherUserInfo.canStolenAmounts);
 
-    const { success, msg } = await etherSvc.steal(otherUserInfo.signature, otherUserInfo.wallet, amount);
+    const { success, msg } = await mintForestGateway.steal(String(otherUserInfo.greenId));
     setLoading(false);
     if (!success) {
       alert.error(msg);
@@ -145,12 +119,7 @@ const Bubble: FC<BubbleInterface> = (props) => {
 
       alert.energyToast('collect', amount);
 
-      updateUserInfo({
-        ...userInfo,
-        stealTimes: userInfo.stealTimes + 1,
-        mfTotalAmounts: String(Number(userInfo?.mfTotalAmounts || 0) + amount),
-      });
-      // notifyService.notify(NotifyEvent.CLAIM_COMPLETE, itemData.data.id);
+      useMintForestStore.getState().syncFromRepository();
 
       if (userInfo.stealTimes == totalStealLimit - 1) {
         setTimeout(() => {
@@ -233,6 +202,7 @@ const Bubble: FC<BubbleInterface> = (props) => {
 
   return (
     <div
+      data-testid={`bubble-${itemData.data.type}`}
       id={`bubble-root-${itemData.data.id}`}
       className={classNames(
         'absolute flex items-center justify-center cursor-pointer max-h-[68px] max-w-[68px] z-[1000] select-none bubble-wave',
