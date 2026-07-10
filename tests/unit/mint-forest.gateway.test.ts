@@ -73,7 +73,7 @@ describe('Mint Forest local compatibility gateway', () => {
       method: 'get',
       params: { greenId: '9999' },
     });
-    const tasks = await gateway.request<{ content: Array<{ id: number }>; next: string }>({
+    const tasks = await gateway.request<Array<{ id: number }>>({
       url: '/api/forest/task/list',
       method: 'get',
       params: { type: 0 },
@@ -96,8 +96,7 @@ describe('Mint Forest local compatibility gateway', () => {
     expect(user.data).toMatchObject({ greenId: 1001, infoType: 'mine' });
     expect(other.data).toMatchObject({ greenId: 2001, domain: 'forest-2001.local' });
     expect(missing.code).toBe(5001);
-    expect(tasks.data.content.map((item) => item.id)).toEqual([1, 2, 3, 4, 6]);
-    expect(tasks.data.next).toBe('');
+    expect(tasks.data.map((item) => item.id)).toEqual([1, 2, 3, 4, 6]);
     expect(task.data.id).toBe(3);
     expect(rank.data.content[0].greenId).toBe(1001);
     expect(invites.data.content.length).toBe(1);
