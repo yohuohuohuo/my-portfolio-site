@@ -610,7 +610,7 @@ rg -n "['\"]/(images|music|fonts)/|url\(/(images|music|fonts)/|static\.mintchain
 
 Expected: only real page routes, portfolio navigation passes, Mint canvas exists, and the asset scan has no matches.
 
-- [ ] **Step 10: Commit structural isolation and local assets**
+- [x] **Step 10: Commit structural isolation and local assets**
 
 ```bash
 git add src public next.config.js tailwind.config.js tests/e2e/portfolio.spec.ts
@@ -637,27 +637,27 @@ git commit -m "feat: add portfolio routes and isolate Mint Forest"
 - Produces: `createSeedState()`, `createMintForestRepository(getStorage)`, pure rules for all mutations.
 - Repository is the only module allowed to call Storage APIs.
 
-- [ ] **Step 1: Write failing repository tests**
+- [x] **Step 1: Write failing repository tests**
 
 Cover: missing key -> seed; valid state -> restore; invalid JSON -> seed; wrong version -> seed; `getStorage()` returns null -> in-memory seed without throwing; update persists; reset restores a deep-cloned seed.
 
-- [ ] **Step 2: Write failing rule tests**
+- [x] **Step 2: Write failing rule tests**
 
 Cover exact `DEMO_VALUES`: login creates the stable session; logout clears only session state; a later login restores the same business state; GreenID once; daily +120 once; invite +80 once; steal `2001/2002/2003` for +60 each, reject duplicate `2001`, and reject valid fourth target `2004` at the max-3 limit; spin cost 100 and reward sequence `[500, 50, 200, 1000, 100]`; insufficient MF fails without consuming an attempt; sixth spin fails; box 501 +150 and 502 +250 then disappear; opening an absent box fails; tasks `2/3/4/6` validate then credit `50/50/100/80` exactly once; repeated validation/claim is stable and does not credit again; reset restores all state.
 
-- [ ] **Step 3: Define the complete state and DTO types**
+- [x] **Step 3: Define the complete state and DTO types**
 
 Copy the currently consumed `IUserInfo`, task, rank, box, NFT, activity, news and invite fields into project-owned types. Implement the exact `MintForestDemoState` above, including claim flags, visited/stolen IDs, spin history and deterministic event sequence. Do not use `any` in new repository/rules/gateway APIs.
 
-- [ ] **Step 4: Implement SSR-safe repository**
+- [x] **Step 4: Implement SSR-safe repository**
 
 The factory must accept a storage getter, catch parse/write errors, validate `schemaVersion === 1`, and deep-clone seed objects. No module-level access to `window`.
 
-- [ ] **Step 5: Implement pure mutation rules**
+- [x] **Step 5: Implement pure mutation rules**
 
 Each rule receives state and returns `{ state, result }` without reading current time, network, wallet or random sources. Event IDs/timestamps derive only from `DEMO_VALUES.baseEventTime` and `nextEventSequence`. Every successful reward appends a deterministic activity item; failures leave state unchanged and return a stable user-facing message.
 
-- [ ] **Step 6: Run unit tests**
+- [x] **Step 6: Run unit tests**
 
 ```bash
 npm run test:unit
