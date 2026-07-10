@@ -1,4 +1,3 @@
-import { StaticBaseUrl } from '../const';
 import { isEmpty } from './common.util';
 
 export function ellipsis(rawString: string | `0x${string}`, firstLength: number, lastLength?: number) {
@@ -18,7 +17,3 @@ export function ellipsis(rawString: string | `0x${string}`, firstLength: number,
     fullString.length
   )}`;
 }
-
-export const staticUrl = (path: string) => {
-  return `${StaticBaseUrl}${path}`;
-};

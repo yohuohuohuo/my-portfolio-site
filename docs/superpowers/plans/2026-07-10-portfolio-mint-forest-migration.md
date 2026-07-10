@@ -271,7 +271,7 @@ Fixture users：mine `1001`，other `2001`、`2002`、`2003`、`2004`。四个 o
 - Consumes: current untracked Mint Forest copy.
 - Produces: first restorable, credential-free Git baseline; no remote branch.
 
-- [ ] **Step 1: Remove the unused Twitter client-secret path without printing its value**
+- [x] **Step 1: Remove the unused Twitter client-secret path without printing its value**
 
 Delete `src/shared/services/twitter.service.ts`. In `src/shared/const/oauth.ts`, remove the `twitter-api-sdk` type import and all Twitter-only constants, including the client-secret export. Retain only constants still required by the temporary Discord flow until Task 8.
 
@@ -283,7 +283,7 @@ rg -n "TWITTER_CLIENT_SECRET|client_secret|twitter-api-sdk" src
 
 Expected: no matches. Do not inspect `.env*`.
 
-- [ ] **Step 2: Harden ignored local artifacts**
+- [x] **Step 2: Harden ignored local artifacts**
 
 Add these lines to `.gitignore`:
 
@@ -303,11 +303,11 @@ rg -il "auth|password|token|secret|credential" .npmrc .vscode
 
 Expected: no matches. If a match appears, inspect only the key name and either remove the credential-bearing file from the baseline or ignore it; never print its value.
 
-- [ ] **Step 3: Replace the RainbowKit template README with the sanitized source-state README**
+- [x] **Step 3: Replace the RainbowKit template README with the sanitized source-state README**
 
 The README must state: source copied from Mint Forest; current state is pre-migration; target routes `/` and `/mint-forest`; no credential values; commands `npm run dev/build/start`; design spec and plan links; no deployment claim.
 
-- [ ] **Step 4: Verify the sanitized baseline still builds**
+- [x] **Step 4: Verify the sanitized baseline still builds**
 
 Run:
 
@@ -317,7 +317,7 @@ npm run build
 
 Expected: exit `0`. Existing ESLint/Browserslist warnings may remain, but no compile/type failure.
 
-- [ ] **Step 5: Stage the complete sanitized baseline and inspect scope**
+- [x] **Step 5: Stage the complete sanitized baseline and inspect scope**
 
 Run separately:
 
@@ -329,7 +329,7 @@ git diff --cached --stat
 
 Expected: project files are staged; `.env`, `.next`, `node_modules`, `_test`, `.DS_Store`, Playwright reports and test results are absent.
 
-- [ ] **Step 6: Commit the baseline**
+- [x] **Step 6: Commit the baseline**
 
 ```bash
 git commit -m "chore: establish sanitized source baseline"
@@ -354,7 +354,7 @@ Expected: first local commit created; no push.
 - Consumes: Yarn v1 lockfile and existing Next scripts.
 - Produces: `npm run test:unit`, `npm run test:e2e`, `npm run verify:routes`, `npm run verify:runtime`.
 
-- [ ] **Step 1: Install only the approved test dependencies with Yarn**
+- [x] **Step 1: Install only the approved test dependencies with Yarn**
 
 ```bash
 yarn add --dev vitest jsdom @playwright/test
@@ -363,7 +363,7 @@ yarn playwright install chromium
 
 Expected: `package.json` and `yarn.lock` update; no `package-lock.json` is created.
 
-- [ ] **Step 2: Add scripts**
+- [x] **Step 2: Add scripts**
 
 Add exactly:
 
@@ -381,7 +381,7 @@ Add exactly:
 }
 ```
 
-- [ ] **Step 3: Configure Vitest**
+- [x] **Step 3: Configure Vitest**
 
 Create `vitest.config.ts`:
 
@@ -399,7 +399,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: Configure Playwright for the required viewports**
+- [x] **Step 4: Configure Playwright for the required viewports**
 
 Create `playwright.config.ts`:
 
@@ -424,13 +424,13 @@ export default defineConfig({
 
 Port `3100` is reserved for the test server so Playwright cannot silently reuse an unrelated app on the normal development port.
 
-- [ ] **Step 5: Add route and runtime verifiers**
+- [x] **Step 5: Add route and runtime verifiers**
 
 `scripts/verify-pages-routes.mjs` must read `.next/server/pages-manifest.json`, require `/` and `/mint-forest`, and fail on route names containing `/home`, `/components/`, `/sections/`, `/views/`, or `/lucky-spin/`.
 
 `scripts/audit-runtime-dependencies.mjs` must scan only `src`, `next.config.js`, and `package.json`; fail on runtime strings/imports for `api.mintforest.io`, `static.mintchain.io`, Mint RPC URLs, RainbowKit, wagmi, viem, WalletConnect, Twitter SDK, reCAPTCHA, Google Analytics, contract ABI imports, `writeContract`, or `sendTransaction`. It must not scan docs or `.env*`.
 
-- [ ] **Step 6: Prove the unit harness works**
+- [x] **Step 6: Prove the unit harness works**
 
 Create `tests/unit/test-harness.test.ts`:
 
@@ -448,12 +448,12 @@ Run:
 
 ```bash
 npm run test:unit
-npx playwright test --list
+npx playwright test --list --pass-with-no-tests
 ```
 
 Expected: unit test passes; Playwright lists zero feature tests without configuration errors.
 
-- [ ] **Step 7: Commit the toolchain**
+- [x] **Step 7: Commit the toolchain**
 
 ```bash
 git add package.json yarn.lock vitest.config.ts playwright.config.ts scripts tests/unit/test-harness.test.ts .gitignore
@@ -489,13 +489,17 @@ git commit -m "test: add migration verification toolchain"
 - Download: `public/projects/mint-forest/images/pic-spin-bg-mobile.png`
 - Download: `public/projects/mint-forest/images/pic-spin-bg.png`
 - Download: `public/projects/mint-forest/images/ic-box.png`
+- Download: `public/projects/mint-forest/images/bubble-robot.gif`
 - Download: `public/projects/mint-forest/images/nft/greenid-demo.png`
 - Create: `public/favicon.svg`
 - Modify asset references: `src/projects/mint-forest/**/*.{ts,tsx,scss}`
 - Modify: `src/pages/_app.tsx`
 - Modify: `src/shared/components/common-img.component.tsx`
+- Modify: `src/shared/components/dropdown.component.tsx`
 - Modify: `src/shared/const/common.const.ts`
+- Modify: `src/shared/const/scene.const.ts`
 - Modify: `src/shared/utils/business/common.helper.ts`
+- Modify: `src/shared/utils/string.util.ts`
 - Modify: `next.config.js`
 - Modify: `tailwind.config.js`
 - Delete: `src/app/layout.tsx`
@@ -509,7 +513,7 @@ git commit -m "test: add migration verification toolchain"
 - Produces: real pages `/` and `/mint-forest`; no internal component routes.
 - Temporary compatibility: `/mint-forest` may still request the existing Web3 wrapper until Task 7; `/` must not require it.
 
-- [ ] **Step 1: Write the failing portfolio and route tests**
+- [x] **Step 1: Write the failing portfolio and route tests**
 
 Create `tests/e2e/portfolio.spec.ts` with assertions that `/` contains a Mint Forest project card, contains no fabricated biography/contact labels, and navigates to `/mint-forest`; assert `/mint-forest` creates a visible canvas.
 
@@ -523,7 +527,7 @@ npm run verify:routes
 
 Expected: portfolio test and route verifier fail because `/` still rewrites to `/home` and `/mint-forest` does not exist.
 
-- [ ] **Step 2: Move local assets and download every currently referenced remote image**
+- [x] **Step 2: Move local assets and download every currently referenced remote image**
 
 Move existing assets first, preserving their current subpaths:
 
@@ -538,15 +542,16 @@ curl --fail --location --output public/projects/mint-forest/images/ic-bubble-lig
 curl --fail --location --output public/projects/mint-forest/images/pic-spin-bg-mobile.png https://static.mintchain.io/forest/pic-spin-bg-mobile.png
 curl --fail --location --output public/projects/mint-forest/images/pic-spin-bg.png https://static.mintchain.io/forest/pic-spin-bg.png
 curl --fail --location --output public/projects/mint-forest/images/ic-box.png https://static.mintchain.io/forest/ic-box.png
+curl --fail --location --output public/projects/mint-forest/images/bubble-robot.gif https://static.mintchain.io/forest-v3/bubble-robot.gif
 curl --fail --location --output public/projects/mint-forest/images/nft/greenid-demo.png https://www.mintchain.io/api/greenid/image/1001
-file public/projects/mint-forest/images/map/map.jpg public/projects/mint-forest/images/*.png public/projects/mint-forest/images/nft/greenid-demo.png
+file public/projects/mint-forest/images/map/map.jpg public/projects/mint-forest/images/*.png public/projects/mint-forest/images/bubble-robot.gif public/projects/mint-forest/images/nft/greenid-demo.png
 ```
 
-Expected: every `curl` exits `0` and `file` identifies valid image data. If the GreenID endpoint returns a supported JPEG/WebP rather than PNG, rename it to the matching extension and use that exact local path. If a required download is unavailable and no equivalent local asset exists, stop under specification section 0.6; never retain a remote fallback.
+Expected: every `curl` exits `0` and `file` identifies valid image data, including the BubbleRobot GIF discovered during the Task 3 source scan. If the GreenID endpoint returns a supported JPEG/WebP rather than PNG, rename it to the matching extension and use that exact local path. If a required download is unavailable and no equivalent local asset exists, stop under specification section 0.6; never retain a remote fallback.
 
 Mechanically rewrite every project `/images/`, `/music/` and `/fonts/` reference to `/projects/mint-forest/images/`, `/projects/mint-forest/music/` and `/projects/mint-forest/fonts/`, including map, bubble, spin, box, GreenID, SCSS and `_app` font paths. `CommonImg` must treat every leading `/` path as same-origin. Delete `StaticBaseUrl`, `staticUrl`, `greenIdTokenUrl`, and `images.remotePatterns` after `rg` confirms no callers. This step intentionally precedes session/action E2E so later tasks never depend on the CDN.
 
-- [ ] **Step 3: Create the project registry**
+- [x] **Step 3: Create the project registry**
 
 `src/portfolio/config/projects.ts` must export:
 
@@ -574,27 +579,27 @@ export const projects: PortfolioProject[] = [{
 }];
 ```
 
-- [ ] **Step 4: Build the minimal neutral portfolio page**
+- [x] **Step 4: Build the minimal neutral portfolio page**
 
 Use semantic `<main>`, one compact heading, one sentence, and project cards from `projects`. Add `data-testid="project-mint-forest"`. Do not add fake profile data, contact links, marketing hero copy, nested cards, gradients, or Mint Forest branding outside the project card. Create a neutral local `public/favicon.svg`; it must not reuse the Mint Forest mark or invent a personal brand.
 
-- [ ] **Step 5: Move the Mint Forest page tree out of `src/pages`**
+- [x] **Step 5: Move the Mint Forest page tree out of `src/pages`**
 
 Use `git mv` for the three paths listed above. Preserve components/sections subpaths. Create `src/pages/mint-forest/index.tsx` as a thin page importing the project root; update all links from `/?id=<greenId>` and `/` back-navigation to `/mint-forest?id=<greenId>` and `/mint-forest`.
 
-- [ ] **Step 6: Separate global and project styles**
+- [x] **Step 6: Separate global and project styles**
 
 `src/styles/globals.scss` retains Tailwind directives and a neutral reset only. Move Mint color variables, `overflow:hidden`, project typography and animation classes into the Mint project styles and scope body-like behavior under `.mint-forest-root`. Because Pages Router only permits global stylesheet imports from `_app.tsx`, `_app.tsx` may import these project-owned SCSS files; every emitted Mint selector must be scoped, except `@font-face` and keyframes.
 
-- [ ] **Step 7: Make `_app.tsx` neutral while temporarily scoping Web3 to Mint Forest**
+- [x] **Step 7: Make `_app.tsx` neutral while temporarily scoping Web3 to Mint Forest**
 
 Replace Mint global metadata with a neutral portfolio title/description and the neutral favicon; remove site-wide Mint OG values instead of presenting the child-project cover as the portfolio identity. Add project-specific local OG metadata in `src/pages/mint-forest/index.tsx`. Render the portfolio without Mint Layout, then delete the now-unused `src/layout` tree. If Task 7 has not run yet, define a typed temporary page flag so only `/mint-forest` receives `RainbowRoot`; document this flag for deletion in Task 7.
 
-- [ ] **Step 8: Update Next and Tailwind config**
+- [x] **Step 8: Update Next and Tailwind config**
 
 Remove the `/` rewrite, assert that Step 2 already removed `images.remotePatterns`, keep SVGR, and add `src/portfolio` plus `src/projects/mint-forest` to Tailwind content.
 
-- [ ] **Step 9: Run route, build, asset and browser verification**
+- [x] **Step 9: Run route, build, asset and browser verification**
 
 ```bash
 npm run build
@@ -958,7 +963,7 @@ file public/projects/mint-forest/images/map/map.jpg public/projects/mint-forest/
 shasum -a 256 public/projects/mint-forest/images/map/map.jpg public/projects/mint-forest/images/ic-bubble-light.png public/projects/mint-forest/images/pic-spin-bg-mobile.png public/projects/mint-forest/images/pic-spin-bg.png public/projects/mint-forest/images/ic-box.png public/projects/mint-forest/images/nft/*
 ```
 
-Expected: all six downloaded assets exist as valid image data. Preserve the hashes for HANDOFF evidence; do not compare them to invented expected hashes.
+Expected: all seven downloaded assets exist as valid image data. Preserve the hashes for HANDOFF evidence; do not compare them to invented expected hashes.
 
 - [ ] **Step 4: Run build, static and browser network verification**
 

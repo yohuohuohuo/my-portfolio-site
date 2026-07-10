@@ -62,6 +62,4 @@ export const ForestContract =
     ? '0x12906892aaa384ad59f2c431867af6632c68100a'
     : '0x12906892aaa384ad59f2c431867af6632c68100a';
 
-export const StaticBaseUrl = 'https://static.mintchain.io';
-
 export const ForestNewsKey = '_me_forest_news';

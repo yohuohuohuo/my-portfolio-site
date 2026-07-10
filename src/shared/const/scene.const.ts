@@ -28,7 +28,7 @@ export const AreaRect = [
       borderStart: '#FFAB76',
       borderEnd: '#AF4F11',
       icon: {
-        url: '/images/map/building/1.png',
+        url: '/projects/mint-forest/images/map/building/1.png',
         width: 330,
       },
       name: {
@@ -62,7 +62,7 @@ export const AreaRect = [
       borderStart: '#FFD60A',
       borderEnd: '#FFE047',
       icon: {
-        url: '/images/map/building/2.png',
+        url: '/projects/mint-forest/images/map/building/2.png',
         width: 400,
       },
       name: {
@@ -96,7 +96,7 @@ export const AreaRect = [
       borderStart: '#45C7F2',
       borderEnd: '#7ED8F6',
       icon: {
-        url: '/images/map/building/3.png',
+        url: '/projects/mint-forest/images/map/building/3.png',
         width: 352,
       },
       name: {
@@ -130,7 +130,7 @@ export const AreaRect = [
       borderStart: '#1CF272',
       borderEnd: '#56F596',
       icon: {
-        url: '/images/map/building/4.png',
+        url: '/projects/mint-forest/images/map/building/4.png',
         width: 390,
       },
       name: {
@@ -164,7 +164,7 @@ export const AreaRect = [
       borderStart: '#48E0A3',
       borderEnd: '#22C986',
       icon: {
-        url: '/images/map/building/5.png',
+        url: '/projects/mint-forest/images/map/building/5.png',
         width: 332,
       },
       name: {
@@ -198,7 +198,7 @@ export const AreaRect = [
       borderStart: '#89B3C8',
       borderEnd: '#5F98B4',
       icon: {
-        url: '/images/map/building/6.png',
+        url: '/projects/mint-forest/images/map/building/6.png',
         width: 320,
       },
       name: {
@@ -232,7 +232,7 @@ export const AreaRect = [
       borderStart: '#638688',
       borderEnd: '#83A3A5',
       icon: {
-        url: '/images/map/building/7.png',
+        url: '/projects/mint-forest/images/map/building/7.png',
         width: 360,
       },
       name: {
@@ -266,7 +266,7 @@ export const AreaRect = [
       borderStart: '#9DC4D2',
       borderEnd: '#73ABBF',
       icon: {
-        url: '/images/map/building/8.png',
+        url: '/projects/mint-forest/images/map/building/8.png',
         width: 286,
       },
       name: {
@@ -300,7 +300,7 @@ export const AreaRect = [
       borderStart: '#6A981B',
       borderEnd: '#8ECC24',
       icon: {
-        url: '/images/map/building/9.png',
+        url: '/projects/mint-forest/images/map/building/9.png',
         width: 378,
       },
       name: {
@@ -334,7 +334,7 @@ export const AreaRect = [
       borderStart: '#D2B393',
       borderEnd: '#D29393',
       icon: {
-        url: '/images/map/building/10.png',
+        url: '/projects/mint-forest/images/map/building/10.png',
         width: 322,
       },
       name: {

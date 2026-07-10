@@ -11,7 +11,6 @@ import React, {
   useState,
 } from 'react';
 import { Popover } from 'react-tiny-popover';
-import '@/shared/styles/rc-dropdown.scss';
 
 const Dropdown: React.FC<
   {
