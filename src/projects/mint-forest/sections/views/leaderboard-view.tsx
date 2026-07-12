@@ -136,7 +136,7 @@ const LeaderboardView: FC<LeaderboardViewInterface> = () => {
           }}
           onClick={onMenuClick}
         >
-          <SearchSvg className={'w-9 h-9 flex-shrink-0 text-[#86D4FF]'} />
+          <SearchSvg className={'w-9 h-9 shrink-0 text-[#86D4FF]'} />
           <span className="bg-transparent relative z-10 text-lg font-semibold text-[#86D4FF]">Search Forest ID</span>
         </div>
         <div
@@ -158,7 +158,7 @@ const LeaderboardView: FC<LeaderboardViewInterface> = () => {
           >
             {userInfo && userInfo.rankVO && <RankItem item={userInfo.rankVO} type="mine" />}
             <div
-              className="h-[1px] w-full bg-[#94E79E] flex-shrink-0 my-4"
+              className="h-[1px] w-full bg-[#94E79E] shrink-0 my-4"
               style={{
                 boxShadow: '0px 1px 0px 0px #AFEF8E',
               }}

@@ -286,7 +286,7 @@ const GreenId: FC<GreenIdInterface> = (props) => {
       {greenIdStatus == GreenIdStatusEnum.Actived ? (
         <>
           <div className="relative mb-12 lg:mb-14 lg:ml-10" onClick={show}>
-            <div className="w-30 h-30 lg:w-40 lg:h-40 rounded-circle bg-gradient-to-b from-[#00721C] to-[#00FF29] border-[3px] border-white"></div>
+            <div className="w-30 h-30 lg:w-40 lg:h-40 rounded-circle bg-linear-to-b from-[#00721C] to-[#00FF29] border-[3px] border-white"></div>
             <span
               style={{ boxShadow: '0px 4px 7.5px 0px rgba(0, 0, 0, 0.25)' }}
               className="block text-sm lg:text-xl font-semibold text-[#14651D] h-10 leading-[18px] lg:h-15 lg:leading-[26px] px-4 lg:px-6 bg-[#D0F4DE] border-2 border-[#6DF1B2] rounded-tr-[8px] rounded-bl-[8px] lg:rounded-tr-[16px] lg:rounded-bl-[16px] absolute bottom-[-14px] left-1/2 -translate-x-1/2"

@@ -75,7 +75,7 @@ const appPath = path.join(process.cwd(), 'src/pages/_app.tsx');
 if (fs.existsSync(appPath)) {
   const appSource = fs.readFileSync(appPath, 'utf8');
   for (const match of appSource.matchAll(/from\s*['"](@\/projects\/mint-forest\/[^'"]+)['"]/g)) {
-    if (!match[1].endsWith('.scss')) {
+    if (!match[1].endsWith('.css')) {
       findings.push({ filePath: 'src/pages/_app.tsx', rule: `Mint runtime import in _app: ${match[1]}` });
     }
   }

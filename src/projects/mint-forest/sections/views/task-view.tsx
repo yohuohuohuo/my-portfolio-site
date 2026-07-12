@@ -136,6 +136,7 @@ const TaskView: FC<TaskViewInterface> = (props) => {
 
   return (
     <div
+      data-testid="task-view"
       className="w-[94vw] h-[82dvh] lg:w-full lg:h-[86dvh] bg-background-lv1 rounded-[20px] lg:rounded-[40px] p-6 lg:p-10 flex flex-col items-start"
       style={{ boxShadow: '0px 2px 4px 0px rgba(255, 255, 255, 0.50) inset, 0px -4px 2px 0px #215994 inset' }}
     >
@@ -203,7 +204,7 @@ const TaskView: FC<TaskViewInterface> = (props) => {
                     }}
                   >
                     <div className="flex flex-1 items-center gap-4">
-                      <div className="w-30 h-30 lg:w-36 lg:h-36 rounded-[12px] flex-shrink-0 overflow-hidden bg-white p-1 flex items-center justify-center">
+                      <div className="w-30 h-30 lg:w-36 lg:h-36 rounded-[12px] shrink-0 overflow-hidden bg-white p-1 flex items-center justify-center">
                         <CommonImg
                           src={task.logo}
                           alt={task.taskTitle}

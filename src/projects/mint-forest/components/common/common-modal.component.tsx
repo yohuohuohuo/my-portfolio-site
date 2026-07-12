@@ -37,7 +37,7 @@ const CommonModal: FC<CommonModalProps & PropsWithChildren> = ({ show, hideClose
         </motion.div>
         {!hideClose && (
           <div
-            className="flex-shrink-0 w-18 h-18 lg:w-26 lg:h-26 border-[3px] border-white flex justify-center items-center bg-[#48D348] rounded-circle lg:rounded-md cursor-pointer text-white hover:brightness-110 absolute lg:static right-10 top-0"
+            className="shrink-0 w-18 h-18 lg:w-26 lg:h-26 border-[3px] border-white flex justify-center items-center bg-[#48D348] rounded-circle lg:rounded-md cursor-pointer text-white hover:brightness-110 absolute lg:static right-10 top-0"
             onClick={onClose}
           >
             <CloseSvg className="w-[77%] h-[77%]" />

@@ -23,7 +23,7 @@ const MenuMy: FC<MenuMyInterface> = (props) => {
         <PortfolioView />
       </CommonModal>
       <div className="relative mb-14 ml-10 cursor-pointer" onClick={onMenuClick}>
-        <div className="w-40 h-40 rounded-circle bg-gradient-to-b from-[#00721C] to-[#00FF29] border-[3px] border-white flex items-center justify-center">
+        <div className="w-40 h-40 rounded-circle bg-linear-to-b from-[#00721C] to-[#00FF29] border-[3px] border-white flex items-center justify-center">
           <CommonImg local className="w-29 mb-2" src="/projects/mint-forest/images/ic-my.png" alt="" />
         </div>
         <span

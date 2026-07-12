@@ -93,7 +93,7 @@ const SearchBox: FC<SearchBoxInterface> = (props) => {
           boxShadow: '0px -3px 4px 0px rgba(0, 0, 0, 0.25) inset, 0px 2px 4px 0px rgba(255, 255, 255, 0.50) inset',
         }}
       >
-        <SearchSvg className={'w-9 h-9 flex-shrink-0 text-[#86D4FF]'} />
+        <SearchSvg className={'w-9 h-9 shrink-0 text-[#86D4FF]'} />
 
         <div className="flex-1 overflow-hidden">
           <input

@@ -90,7 +90,7 @@ const NewsView: FC<NewsViewInterface> = (props) => {
                     {group.announcements.map((item: any, index: number) => {
                       return (
                         <div key={index} className="flex items-start w-full relative z-10">
-                          <div className="flex items-center w-[70px] lg:w-[86px] flex-shrink-0 gap-3 lg:gap-6">
+                          <div className="flex items-center w-[70px] lg:w-[86px] shrink-0 gap-3 lg:gap-6">
                             <div className="w-[17px] h-[17px] rounded-full bg-[rgba(103,198,9,0.5)] flex items-center justify-center">
                               <div className="w-4 h-4 rounded-full bg-[rgba(103,198,9,1)]"></div>
                             </div>

@@ -299,7 +299,7 @@ const BackPackView: FC<BackPackViewInterface> = () => {
                         }}
                       >
                         {loadingBoxIndex === index && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[6px]">
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-[6px]">
                             <LoadMore />
                           </div>
                         )}

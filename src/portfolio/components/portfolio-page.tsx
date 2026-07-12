@@ -1,6 +1,6 @@
 import { projects } from '../config/projects';
 import ProjectCard from './project-card';
-import styles from '../styles/portfolio.module.scss';
+import styles from '../styles/portfolio.module.css';
 
 export default function PortfolioPage() {
   return (

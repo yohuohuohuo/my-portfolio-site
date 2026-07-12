@@ -166,7 +166,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
     <>
       <div
         id="spin-root"
-        className="w-full h-[460px] lg:h-[507px] flex-shrink-0 relative bg-cover !bg-center rounded-t-[26px] lg:rounded-2xl bg-no-repeat bg-[url(/projects/mint-forest/images/pic-spin-bg-mobile.png)] lg:bg-[url(/projects/mint-forest/images/pic-spin-bg.png)]"
+        className="w-full h-[460px] lg:h-[507px] shrink-0 relative bg-cover !bg-center rounded-t-[26px] lg:rounded-2xl bg-no-repeat bg-[url(/projects/mint-forest/images/pic-spin-bg-mobile.png)] lg:bg-[url(/projects/mint-forest/images/pic-spin-bg.png)]"
       >
         <div className="w-full mt-2 lg:mt-5 flex flex-col items-center">
           <SpinTitleSvg className={'w-[68%] lg:w-[380px] h-31'} />
@@ -302,7 +302,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
       >
         <div
           className={classNames(
-            'w-[80vw] lg:w-[380px] bg-gradient-to-b from-[#C3EEE9] to-[#FEFADE] rounded-xl flex flex-col items-center mx-auto py-16 px-20 mt-[20vh] relative'
+            'w-[80vw] lg:w-[380px] bg-linear-to-b from-[#C3EEE9] to-[#FEFADE] rounded-xl flex flex-col items-center mx-auto py-16 px-20 mt-[20vh] relative'
           )}
         >
           <span className="text-[24px] font-bold text-primary mb-6">MF Lucky Spin</span>

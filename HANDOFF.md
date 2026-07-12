@@ -2,13 +2,24 @@
 
 ## 当前快照
 
-日期：2026-07-10
+日期：2026-07-12
 项目根目录：`/Users/qiuyupan/git_workspace/my-portfolio-site`
 分支：`codex/portfolio-migration`
 
-最终本地预览：`http://127.0.0.1:3100/`
+当前开发预览：`http://127.0.0.1:3000/`
 
 本仓库已从 Mint Forest 前端改造成个人作品集结构。`/` 是最小入口，`/mint-forest` 是本地化交互子作品。当前没有 push、merge、rebase、发布或部署动作。
+
+## 2026-07-12 样式工具链迁移
+
+- 已修复 `react-modal` Portal 的主题变量作用域：Mint tokens 现在由 `body:has(.mint-forest-root)` 提供，因此挂在 `document.body` 的任务弹窗可以解析 `bg-background-lv1`。
+- 所有 Sass 文件已转换为标准 CSS 或 CSS Module；仓库没有 `.sass`、`.scss` 或 `*.module.scss` 文件，也没有 `sassOptions`、`sass` 依赖或 `tailwind.config.js`。
+- Tailwind CSS 已升级到 v4，使用 `@tailwindcss/postcss` 和 `postcss.config.mjs`；`autoprefixer` 已移除。PostCSS 仍是 Next.js 处理 Tailwind v4 的必要构建步骤。
+- 旧 Tailwind spacing、颜色、字体、圆角和阴影已迁移到 `src/styles/globals.css` 的 `@theme`。其中 `--spacing: 2px` 与 `--spacing-275: 450px` 保持原有 numeric utility 尺寸。
+- 为 v4 改写了旧 utility：`bg-gradient-to-*` -> `bg-linear-to-*`、`bg-opacity-50` -> `bg-black/50`、`flex-shrink-0` -> `shrink-0`。
+- 新增 Task Portal 回归断言，验证计算背景为 `rgb(49, 133, 222)`，覆盖本次发现的变量继承缺陷。
+
+不要在同一工作树中同时运行 `next dev` 和 `next build`/`next start`：它们共享 `.next`，会造成缺失 chunk。需要 production E2E 时，先停止 dev server，或在隔离副本中 build/start。
 
 当前 HEAD：
 
@@ -34,7 +45,7 @@ Task 8、Task 9、Task 10 的代码已通过阶段性本地 commit 保存；当�
 - `src/projects/mint-forest`：Mint Forest 全部运行时代码。
 - `public/projects/mint-forest`：Mint Forest 本地字体、图片、SVG、音乐和地图资源。
 - `src/shared`：已删除；没有 `@/shared` import。
-- `_app.tsx`：只保留全局 SCSS、字体和中性 metadata；Alert 已移动到 Mint Forest 根组件。
+- `_app.tsx`：只保留全局 CSS、字体和中性 metadata；Alert 已移动到 Mint Forest 根组件。
 - `_document.tsx`：只保留 Next 基础文档结构；Analytics、reCAPTCHA 和外部脚本已删除。
 - `playwright.config.ts`：固定 `workers: 1`，避免多个浏览器 worker 同时触发 Next dev server 编译导致 desktop 回归不稳定。
 
@@ -73,6 +84,17 @@ npm run build           exit 0; Next static generation completed
 npm run test:e2e         17 passed, 1 skipped; desktop 9/9, mobile 8/8 plus desktop-only search skip
 npm run test:e2e -- tests/e2e/network-audit.spec.ts
                          desktop/mobile 2/2 passed; no non-local request or non-HMR 4xx/5xx response
+```
+
+2026-07-12 样式迁移新增验证：
+
+```text
+npx tsc --noEmit          passed
+npm run test:unit         3 test files, 18 tests passed
+npm run verify:routes     Route verification passed (6 routes)
+npm run verify:runtime    Runtime dependency audit passed
+npm run build             exit 0; Next static generation completed
+isolated dev E2E          19 passed, 1 skipped (desktop/mobile; includes Portal variable assertion)
 ```
 
 Build 的已知提示：仓库没有安装 `eslint`，Next 输出 `ESLint must be installed in order to run during builds`；这不是 build exit failure。另有 Browserslist 数据过旧提示。

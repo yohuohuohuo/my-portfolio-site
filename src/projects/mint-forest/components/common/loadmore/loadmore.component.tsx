@@ -1,4 +1,4 @@
-import Styles from './loadmore.module.scss'
+import Styles from './loadmore.module.css'
 
 export default function LoadMore({
   className,

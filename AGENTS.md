@@ -22,7 +22,7 @@ src/
 │   └── mint-forest/index.tsx
 ├── portfolio/
 ├── projects/mint-forest/
-└── styles/globals.scss
+└── styles/globals.css
 
 public/projects/mint-forest/
 ```
@@ -46,6 +46,14 @@ Mint Forest 不得产生以下运行时行为：
 页面使用 `src/projects/mint-forest/data/mint-forest.gateway.ts` 保留原 endpoint 结构，fixtures 和纯规则提供确定性 mock。持久化统一通过 `data/local-storage.repository.ts`，键为 `portfolio:mint-forest:v1`，schema version 为 `1`。
 
 所有 mutation 都必须能体现成功、重复、参数错误或资源不足等状态，不能把 mock 写成无条件成功。用户可通过 `Reset Demo Data` 恢复默认 seed。
+
+## 样式与构建边界
+
+- 样式使用标准 CSS 和 Tailwind CSS v4；不得新增 Sass、`.sass`、`.scss` 或 `*.module.scss` 文件。
+- `src/styles/globals.css` 负责 `@import "tailwindcss"` 与 `@theme` tokens；仓库没有 `tailwind.config.js`。
+- Next.js 仍经由 `postcss.config.mjs` 使用 `@tailwindcss/postcss`。不得删除 PostCSS 配置或以 `autoprefixer` 替代该插件；Tailwind v4 已处理前缀。
+- Mint Forest 的兼容变量定义在 `body:has(.mint-forest-root)`，不能退回 `.mint-forest-root`。`react-modal` Portal 挂在 `body` 下，只有前者能让 `bg-background-lv1` 等 utility 正确解析。
+- Tailwind v4 迁移后使用 `bg-linear-to-*`、`bg-black/50` 和 `shrink-0`，不得重新引入 v3 的 `bg-gradient-to-*`、`bg-opacity-*` 或 `flex-shrink-*` utility。
 
 ## 交互范围
 

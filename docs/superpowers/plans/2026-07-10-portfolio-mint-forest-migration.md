@@ -1,12 +1,14 @@
 # 个人作品集与 Mint Forest 迁移 Implementation Plan
 
+> **状态（2026-07-12）：** 本计划记录的迁移任务已完成，以下 SCSS、Tailwind CSS 3 和 `tailwind.config.js` 内容仅保留为当时的历史执行记录，不得作为当前实施指令。当前样式约束以 `AGENTS.md`、`HANDOFF.md`、`src/styles/globals.css` 和 `postcss.config.mjs` 为准：使用 Tailwind CSS v4、标准 CSS 与 `@tailwindcss/postcss`，不允许新增 Sass 或 `.scss` 文件。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** 把当前 Mint Forest Web3 前端改造成个人作品集项目：`/` 提供最小项目入口，`/mint-forest` 保留全部用户可见业务交互，并用本地 fixtures、compatibility gateway 和版本化 `localStorage` 取代 API、钱包、合约和 OAuth。
 
 **Architecture:** 继续使用 Next.js Pages Router。页面目录只保留薄路由，Mint Forest 的代码、样式、SVG 和状态全部收口到 `src/projects/mint-forest`；现有 endpoint 字符串和 `{ code, msg, data }` envelope 由无网络的 compatibility gateway 接管。所有 mutation 通过可测试的确定性 rules 写入 `portfolio:mint-forest:v1`，Zustand 只承担响应式 UI 状态，不成为第二份持久化真相。
 
-**Tech Stack:** Next.js 15.2.6、React 19、TypeScript 5.5.2、Tailwind CSS 3、SCSS、Zustand、Two.js、Vitest、jsdom、Playwright。
+**Tech Stack（当前）：** Next.js 15.2.6、React 19、TypeScript 5.5.2、Tailwind CSS 4、标准 CSS、`@tailwindcss/postcss`、Zustand、Two.js、Vitest、jsdom、Playwright。
 
 ## Global Constraints
 

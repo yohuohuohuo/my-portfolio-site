@@ -39,7 +39,7 @@ const SpinRule: FC<SpinRuleInterface> = (props) => {
         })}
         <div
           className={classNames(
-            'h-[50px] w-full flex items-center justify-center absolute left-0 bottom-0 bg-gradient-to-b from-[#e6fed1] to-[#FFF] transition-all cursor-pointer lg:hidden',
+            'h-[50px] w-full flex items-center justify-center absolute left-0 bottom-0 bg-linear-to-b from-[#e6fed1] to-[#FFF] transition-all cursor-pointer lg:hidden',
             {
               '!from-[#FFF]': showMore,
             }

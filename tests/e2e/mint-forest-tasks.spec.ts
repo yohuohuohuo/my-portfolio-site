@@ -8,6 +8,17 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByText('Demo ID 1001')).toBeVisible();
 });
 
+test('keeps the Mint theme color when the task view renders in a modal portal', async ({ page }) => {
+  await page.getByText('Task', { exact: true }).first().click();
+
+  const taskView = page.getByTestId('task-view');
+  await expect(taskView).toBeVisible({ timeout: 5000 });
+  await expect(taskView).toHaveCSS('background-color', 'rgb(49, 133, 222)');
+  await expect(
+    taskView.evaluate((element) => getComputedStyle(element).getPropertyValue('--background-lv1-color').trim())
+  ).resolves.toBe('#3185de');
+});
+
 test('verifies Bridge locally and moves the task into Completed without OAuth', async ({ page }) => {
   await page.getByText('Task', { exact: true }).first().click();
   await expect(page.getByTestId('task-open-4')).toBeVisible({ timeout: 5000 });

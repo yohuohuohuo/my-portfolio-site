@@ -77,7 +77,7 @@ const RankItem: FC<RankItemInterface> = ({ item, type }) => {
     <div
       data-testid={type === 'search' && item.greenId ? `search-result-${item.greenId}` : undefined}
       className={classNames(
-        'w-full rounded-[12px] h-30 flex-shrink-0 flex items-center justify-between cursor-pointer'
+        'w-full rounded-[12px] h-30 shrink-0 flex items-center justify-between cursor-pointer'
       )}
       onClick={() => {
         item.greenId && item.greenId !== userInfo?.greenId && push(`/mint-forest?id=${item.greenId}`);

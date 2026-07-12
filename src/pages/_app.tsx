@@ -1,7 +1,7 @@
-import '@/projects/mint-forest/styles/animations.scss';
-import '@/projects/mint-forest/styles/rc-dropdown.scss';
-import '@/projects/mint-forest/styles/theme.scss';
-import '@/styles/globals.scss';
+import '@/projects/mint-forest/styles/animations.css';
+import '@/projects/mint-forest/styles/rc-dropdown.css';
+import '@/projects/mint-forest/styles/theme.css';
+import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { Montserrat } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -30,8 +30,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <Style global>
         {`
           :root {
-            --font-montserrat: ${montserrat.style.fontFamily};
-            --font-DINCond: ${DINCond.style.fontFamily};
+            --font-montserrat-source: ${montserrat.style.fontFamily};
+            --font-DINCond-source: ${DINCond.style.fontFamily};
           }
         `}
       </Style>
