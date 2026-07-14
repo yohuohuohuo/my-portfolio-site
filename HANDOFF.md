@@ -21,6 +21,13 @@
 
 不要在同一工作树中同时运行 `next dev` 和 `next build`/`next start`：它们共享 `.next`，会造成缺失 chunk。需要 production E2E 时，先停止 dev server，或在隔离副本中 build/start。
 
+## 2026-07-14 背包资源映射与审计
+
+- 已修复 `BackPackView` 的本地宝箱图映射：local demo fixtures 使用 `boxId` `501`、`502`，现在分别解析为 `pic-signin-box.png`、`pix-event-box.png`；此前残留的旧 ID `1`、`4` 会触发 `CommonImg` 的默认图 fallback。
+- `tests/e2e/mint-forest-actions.spec.ts` 现在在 desktop/mobile 背包流程中断言两张 seeded 宝箱图的准确 `src`，并确认浏览器已成功解码图片（`naturalWidth > 0`）。
+- 已审计 `src` 中全部 `41` 个 `/projects/mint-forest/...` 图片、SVG 与音频引用：对应 `public` 文件均存在；隔离 dev server 上逐个 HTTP 请求也全部返回 `200`。源码没有远程图片、音频或 SVG URL。
+- 本机存在两个预览注意项：`127.0.0.1:3000` 的长期 dev server 有 stale Next client bundle，干净 Playwright context 可能停在加载层；`127.0.0.1:3100` 已被一个无响应的旧 dev process 占用。未终止这些未知进程，以免影响用户当前预览；验证使用隔离副本的 `127.0.0.1:3102` 完成。
+
 当前 HEAD：
 
 ```text

@@ -66,7 +66,10 @@ interface OpenBoxResponse {
   signature: string;
 }
 
-const BoxImg: any = { 1: '/projects/mint-forest/images/pic-signin-box.png', 4: '/projects/mint-forest/images/pix-event-box.png' };
+const BoxImg: Record<number, string> = {
+  501: '/projects/mint-forest/images/pic-signin-box.png',
+  502: '/projects/mint-forest/images/pix-event-box.png',
+};
 
 interface BackPackViewInterface {}
 

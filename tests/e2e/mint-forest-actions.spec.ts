@@ -24,6 +24,18 @@ test('performs local GreenID, reward, box and spin actions with reload persisten
 
   if (test.info().project.name === 'desktop') await page.getByText('My', { exact: true }).click();
   await page.getByText('BP', { exact: true }).first().click();
+
+  for (const [boxNumber, name, imagePath] of [
+    ['501', 'Demo Mystery Box', '/projects/mint-forest/images/pic-signin-box.png'],
+    ['502', 'Demo Event Box', '/projects/mint-forest/images/pix-event-box.png'],
+  ] as const) {
+    const image = page.getByTestId(`box-${boxNumber}`).getByAltText(name);
+    await expect(image).toHaveAttribute('src', imagePath);
+    await expect(
+      image.evaluate((element) => element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0)
+    ).resolves.toBe(true);
+  }
+
   await page.getByTestId('box-501').click();
   await expect(page.getByText('+150')).toBeVisible({ timeout: 5000 });
   await page.reload();
