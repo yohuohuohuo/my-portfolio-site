@@ -106,4 +106,4 @@
 - [x] 运行 `git diff 24c983d -- docs/interview/generate_interview_guide.py docs/interview/高级前端开发工程师面试指导.docx docs/interview/高级前端开发工程师面试指导.md`，期望无结果。
 - [x] 运行 `git diff --check`，期望通过。
 - [x] 运行 `git status --short` 和 `git diff --name-status`，确认 scope 只有计划内文档。
-- [ ] 做一个仅本地提交；不执行 push、merge、rebase、发布或部署。
+- [x] 做一个仅本地提交；不执行 push、merge、rebase、发布或部署。
