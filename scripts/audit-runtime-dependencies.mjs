@@ -7,12 +7,15 @@ const scanTargets = [
   path.join(process.cwd(), 'package.json'),
 ];
 
+const isMintForestRuntimePath = (relativePath) =>
+  relativePath.startsWith('src/projects/mint-forest/') || relativePath === 'src/pages/mint-forest/index.tsx';
+
 const prohibitedPatterns = [
   ['Mint Forest API', /api\.mintforest\.io/i],
   ['Mint Forest CDN', /static\.mintchain\.io/i],
   ['Mint Chain RPC/explorer/bridge/swap URL', /https?:\/\/[^\s'"`]*(?:rpc|explorer|bridge|swap)\.mintchain\.io[^\s'"`]*/i],
   ['Mint Chain RPC/explorer/bridge/swap host', /(?:rpc|explorer|bridge|swap)\.mintchain\.io/i],
-  ['NFTScan', /nftscan/i],
+  ['NFTScan runtime dependency', /nftscan/i, isMintForestRuntimePath],
   ['RainbowKit', /@rainbow-me\/rainbowkit|\brainbowkit\b/i],
   ['wagmi', /\bwagmi\b/i],
   ['viem', /\bviem\b/i],
@@ -51,14 +54,14 @@ const findings = [];
 
 for (const filePath of scanTargets.flatMap(collectFiles)) {
   const source = fs.readFileSync(filePath, 'utf8');
+  const relativePath = path.relative(process.cwd(), filePath);
 
-  for (const [rule, pattern] of prohibitedPatterns) {
-    if (pattern.test(source)) {
-      findings.push({ filePath: path.relative(process.cwd(), filePath), rule });
+  for (const [rule, pattern, isApplicable = () => true] of prohibitedPatterns) {
+    if (isApplicable(relativePath) && pattern.test(source)) {
+      findings.push({ filePath: relativePath, rule });
     }
   }
 
-  const relativePath = path.relative(process.cwd(), filePath);
   if (relativePath.startsWith('src/') && !relativePath.endsWith('local-storage.repository.ts')) {
     if (/\b(?:window\.)?localStorage\b|\bsessionStorage\b/.test(source)) {
       findings.push({ filePath: relativePath, rule: 'direct browser storage access' });

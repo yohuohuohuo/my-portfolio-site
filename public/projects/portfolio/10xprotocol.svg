@@ -1,0 +1,17 @@
+<svg width="1360" height="720" viewBox="0 0 1360 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1360" height="720" fill="#08110F"/>
+  <path d="M0 480C210 392 356 402 512 466C742 560 944 536 1360 318V720H0V480Z" fill="#0C231E"/>
+  <path d="M0 0H1360V720H0V0Z" fill="url(#grid)" opacity="0.48"/>
+  <rect x="104" y="104" width="1152" height="512" rx="40" fill="#0F1816" stroke="#24E0A6" stroke-width="2"/>
+  <rect x="152" y="152" width="164" height="164" rx="28" fill="#24E0A6"/>
+  <path d="M192 262H214V206H192V184H238V262H260V284H192V262Z" fill="#07100E"/>
+  <path d="M276 184H360V284H276V184ZM300 206V262H336V206H300Z" fill="#07100E"/>
+  <text x="152" y="408" fill="#F6FFFB" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="700">10XProtocol</text>
+  <text x="156" y="480" fill="#9CBEB4" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="500">One-click crypto trading workspace</text>
+  <text x="156" y="540" fill="#24E0A6" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Swap / Bridge / Analysis</text>
+  <defs>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" stroke="#1F4C40" stroke-width="1"/>
+    </pattern>
+  </defs>
+</svg>

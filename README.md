@@ -1,10 +1,10 @@
 # 个人作品集
 
-本项目是从 Mint Forest 前端源码整理出的个人作品集基础。当前入口保持最小化，只展示并连接子作品；Mint Forest 作为本地化交互演示运行，不需要钱包、区块链节点或后端服务。
+本项目是从 Mint Forest 前端源码整理出的个人作品集基础。当前入口保持最小化，展示本地子作品和外链项目；Mint Forest 作为本地化交互演示运行，不需要钱包、区块链节点或后端服务。
 
 ## 路由
 
-- `/`：作品集入口，展示子作品配置。
+- `/`：作品集入口，展示项目配置。本地项目进入站内路由，外链项目打开项目官网。
 - `/mint-forest`：Mint Forest 子作品。
 
 ## 本地运行
@@ -36,7 +36,7 @@ npm run build
 - 登录使用本地 Demo session；GreenID、领取、steal、spin、开箱和任务验证都只修改本地演示状态。
 - 页面运行时不请求 Mint Forest API/CDN、Mint Chain RPC、合约、钱包、OAuth、Analytics 或 reCAPTCHA。
 
-新增子作品时，在 `src/portfolio/config/projects.ts` 增加项目配置，并在 `src/pages` 增加对应薄路由；不要把另一个项目的代码放进 Mint Forest 目录。
+新增外链项目时，只在 `src/portfolio/config/projects.ts` 增加项目配置，并把必要封面素材放到 `public/projects/portfolio`。新增本地子作品时，再在 `src/pages` 增加对应薄路由；不要把另一个项目的代码放进 Mint Forest 目录。
 
 ## 文档
 

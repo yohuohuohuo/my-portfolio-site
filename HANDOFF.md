@@ -8,7 +8,73 @@
 
 当前开发预览：`http://127.0.0.1:3000/`
 
-本仓库已从 Mint Forest 前端改造成个人作品集结构。`/` 是最小入口，`/mint-forest` 是本地化交互子作品。当前没有 push、merge、rebase、发布或部署动作。
+本仓库已从 Mint Forest 前端改造成个人作品集结构。`/` 是最小入口，`/mint-forest` 是本地化交互子作品。作品集入口也支持只配置外链的项目卡片。当前没有 push、merge、rebase、发布或部署动作。
+
+## 2026-07-14 外链项目卡片
+
+- 作品集入口新增 5 个 config-only 外链项目：NFTScan、NFTScan Site、Mint Blockchain、PengoPay、10XProtocol Alpha。
+- 外链项目只改 `src/portfolio` 配置和卡片渲染，不引入对应项目源码，也不新增站内路由。
+- 外链卡片使用本地封面素材：`public/projects/portfolio/nftscan.png`、`nftscan-site.png`、`mintchain.png`、`pengopay.png`、`10xprotocol.png`。10XProtocol 卡片使用用户提供的桌面端截图作为本地封面，不产生外部图片请求。
+- `scripts/audit-runtime-dependencies.mjs` 的 NFTScan 禁用规则已收窄到 Mint Forest runtime 路径，避免误伤作品集外链配置；Mint Forest 运行时仍不得依赖 NFTScan。
+- 新增 E2E 断言验证 5 个外链项目均显示为 `target="_blank"` 的 outbound link，并明确验证 10XProtocol 卡片的 `img[src]` 为 `/projects/portfolio/10xprotocol.png`。
+
+本次验证：
+
+```text
+npm run test:unit                                      3 test files, 18 tests passed
+npm run verify:runtime                                Runtime dependency audit passed
+npx tsc --noEmit                                      passed
+npm run build                                         exit 0; Next static generation completed
+npm run verify:routes                                 Route verification passed (6 routes)
+npm run test:e2e -- tests/e2e/portfolio.spec.ts --reporter=line --timeout=30000
+                                                        desktop/mobile 6/6 passed
+npm run verify:runtime                                Runtime dependency audit passed
+npx tsc --noEmit                                      passed
+```
+
+本次封面替换已在 `1440x900` 和 `390x844` 本地浏览器中检查。10XProtocol 图片已成功解码为 `826x410`，卡片封面显示正常。
+
+已知提示仍与此前一致：npm 输出 `.npmrc` 的 `strict-peer-dependencies` warning；Playwright webServer 输出 npm env `-authtoken` warning；Next build 输出仓库未安装 ESLint 的提示，但 build exit 为 `0`。
+
+## 2026-07-14 Portfolio Lanyard And Chroma Grid
+
+- `/` 已改为暗色作品集入口。顶端 `PortfolioFeatured` 每次完整加载后仅从 `src/portfolio/config/projects.ts` 的 `projects` 配置随机选择一个项目；选择值只保存在 React state，不写入 browser storage。
+- desktop（`min-width: 768px` 且未启用 reduced motion）挂载 client-only `PortfolioLanyard`。它以本地 `/projects/portfolio/lanyard/card.glb` 和 `lanyard.png` 为模型/纹理，并把所选项目的本地 cover 合成到 badge 两面；模型、项目图片和 Canvas 外的 CTA 均不产生远程请求。
+- mobile 和 `prefers-reduced-motion: reduce` 完全不挂载 Canvas、Rapier world 或 GLB；使用同一 selected project 的静态 featured card，保留封面、名称、描述、tags 与内部/外链 CTA。
+- 项目网格使用 `ChromaProjectGrid` 的 GSAP pointer interpolation 和灰度 radial mask。desktop fine-pointer hover 时，当前 card 写入 `data-chroma-active="true"`、恢复局部颜色并显示稳定色相的边框/高光；mobile、coarse pointer 和 reduced motion 保持静态且所有链接可用。
+- 新增依赖：`three`、`@react-three/fiber`、`@react-three/drei`、`@react-three/rapier`、`meshline`、`gsap`。Yarn 安装过程中出现临时 cache 损坏；最终使用独立 temp cache 完成安装，`package.json` 与 `yarn.lock` 已正常写入。
+
+2026-07-14 视觉细化：
+
+- Featured hero 改为完整 `1px` 边框与 `12px` 圆角；Lanyard 镜头调整为 `fov: 12`，固定挂点上移，项目牌、碰撞体和关节锚点等比放大，并以 `x: 2.65` 锚定在 hero 右侧空白区。
+- Chroma 静止遮罩从纯灰的 `grayscale(1)` 调整为 `grayscale(0.42) saturate(0.72) brightness(0.78)`，保留低饱和封面色彩，hover 仍恢复焦点区域的原始颜色。
+- Lanyard GLB、纹理与两帧物理首帧完成后，由 `PortfolioFeatured` 给受控 `portfolio-lanyard` 容器写入 `data-lanyard-ready="true"`；E2E 在该状态后检查 Canvas RGB channel range 大于 `24`，避免把资源加载中的空 framebuffer 误判为渲染成功。
+- `portfolio-lanyard` 还声明 `data-lanyard-placement="right"`，用于回归验证 desktop 右侧锚定；移动端仍不挂载该容器或 Canvas。
+
+本次验证：
+
+```text
+npm run test:unit                                      4 test files, 19 tests passed
+npm run verify:routes                                  Route verification passed (6 routes)
+npm run verify:runtime                                 Runtime dependency audit passed
+npx tsc --noEmit                                       passed
+npm run build                                          exit 0; static generation completed
+npm run test:e2e                                       25 passed, 1 skipped
+npm run test:e2e -- tests/e2e/portfolio.spec.ts        desktop/mobile 10/10 passed
+npx tsc --noEmit                                       passed after visual refinement
+npm run test:unit                                      4 test files, 19 tests passed
+npm run verify:runtime                                 Runtime dependency audit passed
+npm run verify:routes                                  Route verification passed (5 routes)
+portfolio Lanyard targeted E2E                         desktop/mobile 2/2 passed; ready + Canvas pixel range + mobile fallback
+portfolio visual baseline targeted E2E                 desktop 1/1 passed; mobile skipped by design
+Mint Forest direct-route targeted E2E                  desktop/mobile 2/2 passed
+```
+
+视觉证据：desktop Lanyard Canvas 断言 `data-engine` 包含 `three.js`，并截取了 Lanyard/Chroma hover 截图；Canvas screenshot RGB standard deviation 为 `28.6-31.0`，不是空白单色输出。`1440x900` 检查中 Lanyard、语义 CTA 与项目 grid 文本均可见；`390x844` 检查中没有 Lanyard Canvas，静态 featured 和外链 CTA 正常。测试截图位于临时 `test-results`，不属于提交内容。
+
+新增依赖的 Yarn peer 提示：Drei 的部分 transitive package 声明 `@types/three` peer；Yarn 已安装 `@types/three`。已有 npm `.npmrc`、Playwright `-authtoken`、`NO_COLOR/FORCE_COLOR` 以及 build 缺少 ESLint 的提示仍存在，均未导致命令失败。
+
+本次没有重跑 `npm run build`：用户的 `127.0.0.1:3000` dev server 正在同一工作树中运行，build 会与 `.next` 产物冲突。3100 E2E dev server 曾短暂清理 `/mint-forest` 的开发产物，使 3000 返回 404/500；已通过 Mint Forest 定向 E2E 重新生成该页面，并确认 `http://127.0.0.1:3000/mint-forest` 恢复为 `Mint Forest Demo`。后续应在隔离副本运行全量 E2E/build，或先停止 3000 dev server。
 
 ## 2026-07-12 样式工具链迁移
 
