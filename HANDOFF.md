@@ -10,14 +10,6 @@
 
 本仓库已从 Mint Forest 前端改造成个人作品集结构。`/` 是最小入口，`/mint-forest` 是本地化交互子作品。作品集入口也支持只配置外链的项目卡片。当前没有 push、merge、rebase、发布或部署动作。
 
-## 2026-07-15 高级前端面试指南 V2
-
-- 在 `docs/interview/v2/` 新增 Markdown-only 的第二版面试文档集：入口说明、24 个 P0 作战问题、真实项目与 8 个 STAR 故事槽位、扩展技术题库、面试当天一页速查、通用 / Web3 两条 JD 定向复习路径。
-- V2 使用 `[候选人确认]`、`[简历事实]`、`[源码可证]`、`[通用原理]`、`[设计提案]`、`[待补 STAR]` 区分证据来源；未补齐的行为事件统一保留 `[待本人补充]`，不得作为真实经历直接使用。
-- 原有 `docs/interview/高级前端开发工程师面试指导.md`、DOCX 和 `generate_interview_guide.py` 保持不变，继续作为完整历史题库；V2 不生成 DOCX。
-- 设计规格：`docs/superpowers/specs/2026-07-15-senior-frontend-interview-guide-v2-design.md`；执行计划：`docs/superpowers/plans/2026-07-15-senior-frontend-interview-guide-v2.md`。
-- 本次没有修改应用代码、runtime、依赖、构建配置或测试。静态文档验收和最终本地提交结果见本轮交付记录；禁止 push、merge、rebase、发布和部署的边界不变。
-
 ## 2026-07-14 外链项目卡片
 
 - 作品集入口新增 5 个 config-only 外链项目：NFTScan、NFTScan Site、Mint Blockchain、PengoPay、10XProtocol Alpha。
