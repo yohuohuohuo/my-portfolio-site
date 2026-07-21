@@ -44,5 +44,4 @@ yarn-error.log*
 /_test
 .env
 
-docs/interview/
-docs/resume/
+docs
