@@ -1,23 +1,8 @@
-const path = require('path');
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
   devIndicators: false,
-  sassOptions: {
-    includePaths: [path.join(__dirname, 'styles')],
-  },
   pageExtensions: ['tsx', 'jsx', 'ts'],
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'static.mintchain.io',
-        port: '',
-        pathname: '/forest/**',
-      },
-    ],
-  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -44,14 +29,6 @@ const nextConfig = {
       ],
     });
     return config;
-  },
-  rewrites() {
-    return [
-      {
-        source: '/',
-        destination: '/home',
-      },
-    ];
   },
 };
 
