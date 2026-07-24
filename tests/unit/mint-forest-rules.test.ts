@@ -18,6 +18,10 @@ const loggedIn = () => login(createSeedState(), 'FOREST-DEMO').state;
 const amount = (state: ReturnType<typeof createSeedState>) => Number(state.users['1001'].mfTotalAmounts);
 
 describe('Mint Forest deterministic rules', () => {
+  it('uses the six rewards rendered by the wheel in clockwise order', () => {
+    expect(DEMO_VALUES.spinRewards).toEqual([50, 100, 500, 2000, 8000, 2000]);
+  });
+
   it('restores the same user state after logout and login', () => {
     const afterClaim = claimDaily(loggedIn()).state;
     const afterLogout = logout(afterClaim).state;
@@ -61,18 +65,22 @@ describe('Mint Forest deterministic rules', () => {
   it('charges each spin and returns the fixed reward sequence', () => {
     let state = loggedIn();
     const rewards: number[] = [];
+    const sectors: number[] = [];
 
     for (let index = 0; index < DEMO_VALUES.maxSpin; index += 1) {
       const result = spin(state);
       expect(result.result.success).toBe(true);
       rewards.push(Number(result.result.data.amount));
+      sectors.push(result.result.data.sectorIndex ?? -1);
       state = result.state;
     }
 
-    expect(rewards).toEqual(DEMO_VALUES.spinRewards);
+    expect(rewards).toEqual(DEMO_VALUES.spinRewards.slice(0, DEMO_VALUES.maxSpin));
+    expect(sectors).toEqual([0, 1, 2, 3, 4]);
     expect(spin(state).result.success).toBe(false);
     expect(amount(state)).toBe(
-      DEMO_VALUES.initialMf - DEMO_VALUES.spinCost * DEMO_VALUES.maxSpin + DEMO_VALUES.spinRewards.reduce((sum, value) => sum + value, 0),
+      DEMO_VALUES.initialMf - DEMO_VALUES.spinCost * DEMO_VALUES.maxSpin +
+        DEMO_VALUES.spinRewards.slice(0, DEMO_VALUES.maxSpin).reduce((sum, value) => sum + value, 0),
     );
   });
 

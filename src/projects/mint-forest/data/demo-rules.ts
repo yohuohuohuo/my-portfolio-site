@@ -144,7 +144,8 @@ export function spin(state: MintForestDemoState): RuleResult<SpinResult> {
   if (user(state).turntableTimes >= state.config.maxSpin) return failure(state, 'There are no spins remaining.');
   if (Number(user(state).mfTotalAmounts) < state.config.turntableSpent) return failure(state, 'Not enough MF for this spin.');
 
-  const reward = state.config.turntableRewards[state.spinRewardCursor];
+  const sectorIndex = state.spinRewardCursor % state.config.turntableRewards.length;
+  const reward = state.config.turntableRewards[sectorIndex];
   const times = user(state).turntableTimes + 1;
   let nextState = addAmount(state, reward - state.config.turntableSpent);
   nextState = withUser(nextState, { turntableTimes: times });
@@ -156,7 +157,7 @@ export function spin(state: MintForestDemoState): RuleResult<SpinResult> {
   nextState = addActivity(nextState, 10, reward, 'Lucky Spin');
   return {
     state: cloneState(nextState),
-    result: { success: true, data: { signature: '', turntableId: times, times, amount: String(reward) } },
+    result: { success: true, data: { signature: '', turntableId: times, times, amount: String(reward), sectorIndex } },
   };
 }
 

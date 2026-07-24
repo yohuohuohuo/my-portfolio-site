@@ -92,19 +92,31 @@ test('portfolio shows a desktop lanyard and a static mobile featured project', a
   await expect(page.getByTestId('portfolio-lanyard')).toHaveCount(0);
 });
 
-test('desktop portfolio softens the featured frame and preserves muted Chroma color at rest', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop', 'The Chroma baseline mask is only rendered for desktop fine pointers.');
+test('portfolio projects use a static grid without Chroma hover effects', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'The static grid interaction is covered by the desktop project.');
 
   await page.goto('/');
 
-  await expect(page.getByTestId('portfolio-featured')).toHaveCSS('border-top-left-radius', '12px');
+  const grid = page.locator('section[aria-label="Projects"]');
+  const project = page.getByTestId('project-10xprotocol');
+  const outboundLink = project.getByRole('link', { name: 'Visit 10XProtocol Alpha' });
 
-  const chromaBaseMask = page.getByTestId('chroma-base-mask');
-  await expect(chromaBaseMask).toBeVisible();
-  await expect(chromaBaseMask).toHaveCSS('backdrop-filter', 'grayscale(0.42) saturate(0.72) brightness(0.78)');
+  await expect(grid).toHaveCSS('display', 'grid');
+  await expect(grid).toHaveClass(/(?:^|\s)grid(?:\s|$)/);
+  await expect(grid).toHaveClass(/sm:grid-cols-2/);
+  await expect(grid).toHaveClass(/lg:grid-cols-3/);
+  await expect(project).toHaveClass(/(?:^|\s)flex(?:\s|$)/);
+  await expect(grid).not.toHaveAttribute('data-chroma-enabled', 'true');
+  await expect(grid.getByTestId('chroma-base-mask')).toHaveCount(0);
+
+  await project.hover();
+  await expect(project).not.toHaveAttribute('data-chroma-active', 'true');
+  await expect(project).toHaveCSS('transition-duration', '0s');
+  await expect(project.locator('img')).toHaveCSS('transition-duration', '0s');
+  await expect(outboundLink).toHaveAttribute('data-specular-button', 'true');
 });
 
-test('portfolio project cards expose Chroma hover state without affecting mobile links', async ({ page }, testInfo) => {
+test('portfolio project cards keep links usable without hover state', async ({ page }, testInfo) => {
   await page.goto('/');
 
   const project = page.getByTestId('project-10xprotocol');
@@ -114,14 +126,45 @@ test('portfolio project cards expose Chroma hover state without affecting mobile
 
   if (testInfo.project.name === 'desktop') {
     await project.hover();
-    await expect(project).toHaveAttribute('data-chroma-active', 'true');
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: testInfo.outputPath('portfolio-chroma-desktop.png') });
+    await expect(project).not.toHaveAttribute('data-chroma-active', 'true');
     return;
   }
 
   await expect(project).not.toHaveAttribute('data-chroma-active', 'true');
   await project.screenshot({ path: testInfo.outputPath('portfolio-chroma-mobile.png') });
+});
+
+test('portfolio CTA links use SpecularButton', async ({ page }) => {
+  await page.goto('/');
+
+  const featuredLink = page.getByTestId('portfolio-featured').locator('[data-specular-button="true"]');
+  const projectLink = page.getByTestId('project-mint-forest').locator('[data-specular-button="true"]');
+
+  await expect(featuredLink).toHaveCount(1);
+  await expect(featuredLink.locator('canvas')).toHaveCount(1);
+  await expect(projectLink).toHaveCount(1);
+  await expect(projectLink.locator('canvas')).toHaveCount(1);
+
+  const projectButtonTint = await projectLink.evaluate((element) => element.style.getPropertyValue('--sb-tint').trim());
+
+  expect(projectButtonTint).toBe('#f1ede3');
+
+  const overlayInset = await featuredLink.evaluate((element) => {
+    const buttonRect = element.getBoundingClientRect();
+    const overlayRect = element.querySelector('span[aria-hidden="true"]')?.getBoundingClientRect();
+
+    if (!overlayRect) {
+      return null;
+    }
+
+    return {
+      left: buttonRect.left - overlayRect.left,
+      top: buttonRect.top - overlayRect.top,
+    };
+  });
+
+  expect(overlayInset?.left).toBeCloseTo(20, 0);
+  expect(overlayInset?.top).toBeCloseTo(20, 0);
 });
 
 test('Mint Forest is available as a direct page route', async ({ page }) => {

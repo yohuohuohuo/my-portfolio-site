@@ -1,82 +1,33 @@
-'use client';
-
-import Link from 'next/link';
-import { useEffect, useState, type CSSProperties, type MouseEvent } from 'react';
 import type { PortfolioProject } from '../config/projects';
-import styles from '../styles/chroma-project-card.module.css';
+import PortfolioProjectLink from './portfolio-project-link';
 
 interface ProjectCardProps {
-  chromaIndex: number;
   project: PortfolioProject;
 }
 
-const CARD_HUES = [142, 191, 337, 38, 273, 208];
-
-function useFinePointer(): boolean {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
-    const update = () => setEnabled(mediaQuery.matches);
-
-    update();
-    mediaQuery.addEventListener('change', update);
-
-    return () => mediaQuery.removeEventListener('change', update);
-  }, []);
-
-  return enabled;
-}
-
-export default function ProjectCard({ chromaIndex, project }: ProjectCardProps) {
-  const canUseChroma = useFinePointer();
-  const [isChromaActive, setChromaActive] = useState(false);
-  const linkLabel = project.internal ? `Open ${project.name}` : `Visit ${project.name}`;
-  const cardStyle = { '--card-hue': CARD_HUES[chromaIndex % CARD_HUES.length] } as CSSProperties;
-
-  const handleMouseMove = (event: MouseEvent<HTMLElement>) => {
-    if (!canUseChroma) {
-      return;
-    }
-
-    const bounds = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty('--mouse-x', `${event.clientX - bounds.left}px`);
-    event.currentTarget.style.setProperty('--mouse-y', `${event.clientY - bounds.top}px`);
-  };
-
+export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article
-      data-chroma-active={isChromaActive ? 'true' : undefined}
       data-testid={`project-${project.id}`}
-      className={styles.card}
-      onMouseMove={handleMouseMove}
-      onPointerEnter={() => canUseChroma && setChromaActive(true)}
-      onPointerLeave={() => setChromaActive(false)}
-      style={cardStyle}
+      className="flex min-w-0 flex-col overflow-hidden rounded-[8px] border border-[#32353e] bg-[#17191f] text-[#f3f1ec]"
     >
-      <div className={styles.media}>
-        <img src={project.cover} alt={`${project.name} cover`} loading="lazy" />
+      <div className="aspect-[16/9] overflow-hidden bg-[#242731]">
+        <img className="block h-full w-full object-cover" src={project.cover} alt={`${project.name} cover`} loading="lazy" />
       </div>
-      <div className={styles.content}>
-        <div className={styles.heading}>
-          <h2>{project.name}</h2>
-          <span className={styles.status}>{project.status}</span>
+      <div className="flex flex-1 flex-col gap-[16px] p-[20px]">
+        <div className="flex items-start justify-between gap-[16px]">
+          <h2 className="m-0 text-[18px] font-bold leading-[1.2] text-[#f5f3ed]">{project.name}</h2>
+          <span className="shrink-0 text-[11px] font-bold uppercase leading-[1.2] text-[#aaa9a4]">{project.status}</span>
         </div>
-        <p className={styles.description}>{project.description}</p>
-        <div className={styles.tags} aria-label={`${project.name} technologies`}>
+        <p className="m-0 text-[14px] leading-[1.65] text-[#b9b8b3]">{project.description}</p>
+        <div className="flex flex-wrap gap-[8px]" aria-label={`${project.name} technologies`}>
           {project.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
+            <span className="border border-[#3b3e47] px-[7px] py-[5px] text-[12px] leading-none text-[#ccc9c1]" key={tag}>
+              {tag}
+            </span>
           ))}
         </div>
-        {project.internal ? (
-          <Link href={project.href} className={styles.link} aria-label={linkLabel}>
-            {linkLabel}
-          </Link>
-        ) : (
-          <a href={project.href} target="_blank" rel="noopener noreferrer" className={styles.link} aria-label={linkLabel}>
-            {linkLabel}
-          </a>
-        )}
+        <PortfolioProjectLink project={project} variant="card" />
       </div>
     </article>
   );

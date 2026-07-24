@@ -144,7 +144,7 @@ describe('Mint Forest local compatibility gateway', () => {
     expect(opened.data).toMatchObject({ boxNumber: 501, speedAmount: '150' });
     expect(afterActivity.data.content).toHaveLength(1);
     expect(afterActivity.data.content[0].amount).toBe(150);
-    expect(spin.data).toMatchObject({ amount: '500', times: 1 });
+    expect(spin.data).toMatchObject({ amount: '50', sectorIndex: 0, times: 1 });
   });
 
   it('uses local task verification and returns stable error codes', async () => {

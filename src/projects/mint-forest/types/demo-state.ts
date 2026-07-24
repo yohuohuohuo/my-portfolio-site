@@ -15,7 +15,8 @@ export const DEMO_VALUES = {
   totalStealLimit: 3,
   maxSpin: 5,
   spinCost: 100,
-  spinRewards: [500, 50, 200, 1000, 100],
+  // Clockwise from the pointer's starting position in pic-spin.svg.
+  spinRewards: [50, 100, 500, 2000, 8000, 2000],
   boxRewards: { 501: 150, 502: 250 },
   taskRewards: { 2: 50, 3: 50, 4: 100, 6: 80 },
   levelConfig: [1000, 3000, 6000, 10000, 20000],

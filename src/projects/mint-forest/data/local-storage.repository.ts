@@ -1,5 +1,5 @@
 import { createSeedState } from './fixtures/seed.fixture';
-import { MINT_FOREST_SCHEMA_VERSION, MINT_FOREST_STORAGE_KEY, type MintForestDemoState } from '../types/demo-state';
+import { DEMO_VALUES, MINT_FOREST_SCHEMA_VERSION, MINT_FOREST_STORAGE_KEY, type MintForestDemoState } from '../types/demo-state';
 
 interface StorageLike {
   getItem(key: string): string | null;
@@ -19,7 +19,17 @@ function defaultStorage(): StorageLike | null {
 }
 
 function isValidState(value: unknown): value is MintForestDemoState {
-  return typeof value === 'object' && value !== null && (value as { schemaVersion?: unknown }).schemaVersion === MINT_FOREST_SCHEMA_VERSION;
+  if (typeof value !== 'object' || value === null) return false;
+
+  const state = value as { schemaVersion?: unknown; config?: { turntableRewards?: unknown } };
+  const rewards = state.config?.turntableRewards;
+
+  return (
+    state.schemaVersion === MINT_FOREST_SCHEMA_VERSION &&
+    Array.isArray(rewards) &&
+    rewards.length === DEMO_VALUES.spinRewards.length &&
+    rewards.every((reward, index) => reward === DEMO_VALUES.spinRewards[index])
+  );
 }
 
 export function createMintForestRepository(getStorage: StorageGetter = defaultStorage) {

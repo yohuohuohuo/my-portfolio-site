@@ -1,24 +1,24 @@
 import { projects } from '../config/projects';
-import ChromaProjectGrid from './chroma-project-grid';
+import ProjectGrid from './project-grid';
 import ProjectCard from './project-card';
 import PortfolioFeatured from './portfolio-featured';
-import styles from '../styles/portfolio.module.css';
+import PortfolioEyebrow from './portfolio-eyebrow';
 
 export default function PortfolioPage() {
   return (
-    <main className={styles.page}>
-      <div className={styles.shell}>
-        <header className={styles.header}>
-          <p className={styles.eyebrow}>Projects</p>
-          <h1 className={styles.pageTitle}>Personal Portfolio</h1>
-          <p className={styles.pageDescription}>A small collection of interactive work.</p>
+    <main className="min-h-[100dvh] bg-[#090a0d] text-[#f2f0ea]">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1200px] flex-col gap-[40px] px-[24px] pb-[64px] pt-[48px] sm:px-[40px] md:pt-[64px]">
+        <header className="max-w-[560px]">
+          <PortfolioEyebrow>Projects</PortfolioEyebrow>
+          <h1 className="m-[10px_0_0] text-[clamp(32px,5vw,54px)] font-bold leading-none text-[#f7f5ef]">Personal Portfolio</h1>
+          <p className="mt-[16px] text-[16px] leading-[1.65] text-[#b8b7b2]">A small collection of interactive work.</p>
         </header>
         <PortfolioFeatured />
-        <ChromaProjectGrid>
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} chromaIndex={index} project={project} />
+        <ProjectGrid>
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
-        </ChromaProjectGrid>
+        </ProjectGrid>
       </div>
     </main>
   );

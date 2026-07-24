@@ -127,6 +127,7 @@ export interface SpinResult {
   turntableId: number;
   times: number;
   amount: string;
+  sectorIndex?: number;
 }
 
 export interface TaskVerifyResult {

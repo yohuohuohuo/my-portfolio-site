@@ -54,3 +54,28 @@ test('opens local task, leaderboard, invite, backpack, news and lucky views', as
     await page.waitForTimeout(400);
   }
 });
+
+test('centers the lucky spin wheel on its pointer', async ({ page }) => {
+  await enterDemo(page);
+  await page.getByText('Lucky', { exact: true }).first().click();
+
+  const wheel = page.locator('#spin-root svg[viewBox="0 0 473 472"]');
+  const pointer = page.getByTestId('spin-pointer');
+
+  await expect(wheel).toHaveCount(1);
+  await expect(pointer).toBeVisible();
+
+  const centers = await Promise.all([
+    wheel.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }),
+    pointer.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }),
+  ]);
+
+  expect(Math.abs(centers[0].x - centers[1].x)).toBeLessThanOrEqual(2);
+  expect(Math.abs(centers[0].y - centers[1].y)).toBeLessThanOrEqual(2);
+});

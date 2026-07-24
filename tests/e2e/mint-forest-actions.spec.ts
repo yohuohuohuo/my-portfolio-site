@@ -43,5 +43,5 @@ test('performs local GreenID, reward, box and spin actions with reload persisten
 
   await page.getByText('Lucky', { exact: true }).first().click();
   await page.getByTestId('spin-pointer').click();
-  await expect(page.getByText('Congratulations on winning 500 MF')).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText('Congratulations on winning 50 MF')).toBeVisible({ timeout: 10000 });
 });

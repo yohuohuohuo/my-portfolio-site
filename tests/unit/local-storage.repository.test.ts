@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createSeedState } from '@/projects/mint-forest/data/fixtures/seed.fixture';
 import { createMintForestRepository } from '@/projects/mint-forest/data/local-storage.repository';
-import { MINT_FOREST_SCHEMA_VERSION } from '@/projects/mint-forest/types/demo-state';
+import { DEMO_VALUES, MINT_FOREST_SCHEMA_VERSION } from '@/projects/mint-forest/types/demo-state';
 
 function createMemoryStorage() {
   const values = new Map<string, string>();
@@ -43,6 +43,20 @@ describe('Mint Forest local storage repository', () => {
       JSON.stringify({ ...seed, schemaVersion: 99 }),
     );
     expect(repository.get().schemaVersion).toBe(MINT_FOREST_SCHEMA_VERSION);
+  });
+
+  it('reseeds persisted state when its spin rewards no longer match the wheel', () => {
+    const storage = createMemoryStorage();
+    const repository = createMintForestRepository(() => storage);
+    const staleState = createSeedState();
+    staleState.session = { loggedIn: true, token: 'demo-session-v1', userGreenId: '1001' };
+    staleState.config.turntableRewards = [500, 50, 200, 1000, 100];
+    storage.setItem('portfolio:mint-forest:v1', JSON.stringify(staleState));
+
+    const current = repository.get();
+
+    expect(current.session.loggedIn).toBe(false);
+    expect(current.config.turntableRewards).toEqual(DEMO_VALUES.spinRewards);
   });
 
   it('works in an SSR-like environment without a storage object', () => {

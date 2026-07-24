@@ -64,9 +64,9 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
     start: false,
   });
 
-  const energyRange = useMemo(() => {
+  const wheelRewards = useMemo(() => {
     if (!turntableConfig) return [];
-    return turntableConfig.map((item) => Number(item.amount)).reverse();
+    return turntableConfig.map((item) => Number(item.amount));
   }, [turntableConfig]);
 
   useEffect(() => {
@@ -132,11 +132,15 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
 
   const start = (data: any) => {
     const amount = Number(data.amount);
-    const gift = energyRange.findIndex((item) => item == amount);
+    const configuredSectorIndex = Number(data.sectorIndex);
+    const fallbackSectorIndex = wheelRewards.findIndex((item) => item === amount);
+    const sectorIndex = Number.isInteger(configuredSectorIndex) && configuredSectorIndex >= 0
+      ? configuredSectorIndex % 6
+      : Math.max(fallbackSectorIndex, 0);
 
     setRotateInfo((current) => {
       return {
-        rotate: current.rotate + 360 * 8 - (360 / 6) * (5 - gift) - (current.rotate % 360),
+        rotate: current.rotate + 360 * 8 - (360 / 6) * sectorIndex - (current.rotate % 360),
         duration: 4000,
         start: true,
       };
@@ -201,7 +205,7 @@ const SpinBox: FC<SpinBoxInterface> = (props) => {
               }}
             >
               <SpinSvg
-                className={'absolute left-[50%] translate-x-[-50%] transition-all'}
+                className={'absolute left-[50%] transition-all'}
                 style={{
                   transitionDuration: `${rotateInfo.duration}ms`,
                   transform: `translateX(-50%) rotate(${rotateInfo.rotate}deg)`,
